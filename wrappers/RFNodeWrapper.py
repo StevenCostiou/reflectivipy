@@ -21,10 +21,10 @@ class RFNodeWrapper:
         reifications = self.reifications_node_for(rf_node)
 
         new_body = list()
-        new_body.append(rf_node.hook.gen_before_call_node(reifications))
+        # new_body.append(rf_node.hook.gen_before_call_node(reifications))
         new_body.append(self.basic_wrap(rf_node))
-        new_body.append(rf_node.hook.gen_after_call_node(reifications))
-        new_body.append(ast.Return(gen_var_read_node('return_val')))
+        # new_body.append(rf_node.hook.gen_after_call_node(reifications))
+        new_body.append(ast.Return(ast_load('return_val')))
 
         wrapper_node.body[0].body = new_body
         ast.fix_missing_locations(wrapper_node)
@@ -38,7 +38,7 @@ class RFNodeWrapper:
         keys = list()
         values = list()
         keys.append(ast.Str('entity'))
-        values.append(gen_var_read_node('self'))
+        values.append(ast_load('self'))
 
         keys.append(ast.Str('class'))
         values.append(ast.Const(rf_node.method_node.method_class))
@@ -52,7 +52,7 @@ class RFNodeWrapper:
         return 'return_val'
 
     def store_node_for_return(self):
-        return gen_ast_store(self.return_val_name())
+        return ast_store(self.return_val_name())
 
     def compile_wrapper_node(self, wrapper_node):
         method_name = wrapper_node.body[0].name

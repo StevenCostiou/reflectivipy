@@ -1,8 +1,16 @@
+import Reflectivity
+
+
+def sample_node():
+    rf_ast = Reflectivity.reflective_method_for(ReflectivityExample, 'example_assign')
+    return rf_ast.original_ast.body[0].body[0]
+
+
 class ReflectivityExample:
     def __init__(self):
         self.tag = None
 
-    def tag_exec(self):
+    def tag_exec_(self):
         self.tag = 'tag'
 
     def tag_exec(self, reifications):

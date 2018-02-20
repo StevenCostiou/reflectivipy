@@ -10,9 +10,10 @@ What is added:
 - id
 
 '''
+
 from Hook import Hook
 from ast_tools import *
-
+import Reflectivity
 
 class RFAstBuilder:
     def __init__(self):
@@ -25,12 +26,6 @@ class RFAstBuilder:
         method_node.method_class = method_class
         return self.build_rf_ast(method_node)
 
-    def rf_ast(self, method):
-        method_node = ast_for_method(method)
-        method_node.method_name = method.__name__
-        method_node.method_class = method.__class__
-        return self.build_rf_ast(method_node)
-
     def build_rf_ast(self, ast):
         self.method_node = ast
         self.method_node.is_method = True
@@ -41,10 +36,20 @@ class RFAstBuilder:
         if not node == self.method_node:
             node.is_method = False
 
-        self.set_method_node(node)
-        self.set_index(node)
-        self.set_hook(node)
+        node.method_node = self.method_node
+        node.wrapping_method_node = self.method_node
+
+        node.rf_id = self.current_index
+        self.current_index += 1
+
+        node.hook = Hook()
         node.method_class = self.method_node.method_class
+        node.links = set()
+
+        if node.__class__ in Reflectivity.flat_wrappers:
+            node.wrapper = Reflectivity.flat_wrappers[node.__class__](node)
+        else:
+            node.wrapper = Reflectivity.flat_wrappers['generic'](node)
 
         children = []
 
@@ -53,19 +58,5 @@ class RFAstBuilder:
             children.append(child)
             self.visit_node(child)
 
-        self.set_children(node, children)
-        return node
-
-    def set_method_node(self, node):
-        node.method_node = self.method_node
-        node.wrapping_method_node = self.method_node
-
-    def set_index(self, node):
-        node.rf_id = self.current_index
-        self.current_index += 1
-
-    def set_children(self, node, children):
         node.children = children
-
-    def set_hook(self, node):
-        node.hook = Hook()
+        return node

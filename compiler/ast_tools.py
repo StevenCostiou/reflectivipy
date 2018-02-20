@@ -22,13 +22,13 @@ def compile_rf_method(rf_ast, class_or_object, method_name):
     setattr(class_or_object, method_name, locs[method_name])
 
 
-def gen_ast_assignment(store_node, value_node):
+def ast_assign(store_node, value_node):
     return Assign(targets=[store_node], value=value_node)
 
 
-def gen_ast_store(var_name):
+def ast_store(var_name):
     return ast.Name(id=var_name, ctx=ast.Store())
 
 
-def gen_var_read_node(var_name):
+def ast_load(var_name):
     return ast.Name(id=var_name, ctx=ast.Load())

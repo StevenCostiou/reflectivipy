@@ -3,7 +3,7 @@ from wrappers.RFNodeWrapper import *
 
 class RFAssignWrapper(RFNodeWrapper):
     def basic_wrap(self, rf_node):
-        return gen_ast_assignment(self.store_node_for_return(), rf_node.value)
+        return ast_assign(self.store_node_for_return(), rf_node.value)
 
     def replace_node_by_wrapper(self, rf_node, wrapper_node):
         rf_node.value = self.wrapper_call_node(wrapper_node)

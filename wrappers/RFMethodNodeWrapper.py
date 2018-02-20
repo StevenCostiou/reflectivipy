@@ -13,7 +13,7 @@ class RFMethodNodeWrapper(RFNodeWrapper):
                 args.append(arg)
 
         call_node = self.generate_call_to_wrapped(rf_method.wrapped_method_name(), args)
-        return gen_ast_assignment(self.store_node_for_return(), call_node)
+        return ast_assign(self.store_node_for_return(), call_node)
 
     def base_wrapper_node_from(self, rf_method):
         return rf_method.new_method_wrapper_node()

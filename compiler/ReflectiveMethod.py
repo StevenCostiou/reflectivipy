@@ -74,3 +74,12 @@ class ReflectiveMethod():
         self.compile_rf_method(self.wrapped_ast, self.wrapped_method_name())
         self.compile_rf_method(self.wrapping_ast, self.method_name)
         return
+
+    def invalidate(self):
+        method_node = self.wrapped_ast
+        new_body = list()
+        for node in method_node.body[0].body:
+            new_body.extend(node.wrapper.flat_wrap())
+        method_node.body[0].body = new_body
+        ast.fix_missing_locations(method_node)
+        self.recompile()

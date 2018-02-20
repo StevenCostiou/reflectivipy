@@ -2,11 +2,17 @@ from compiler.RFAstBuilder import RFAstBuilder
 from compiler.ReflectiveMethod import ReflectiveMethod
 from wrappers.RFAssignWrapper import *
 from wrappers.RFMethodNodeWrapper import RFMethodNodeWrapper
+from flat_wrappers.RFFlatWrapper import RFFlatWrapper
+from flat_wrappers.RFFlatAssignWrapper import RFFlatAssignWrapper
 
 rf_methods = dict()
 wrappers = dict()
 wrappers[ast.Assign] = RFAssignWrapper()
 wrappers[ast.Module] = RFMethodNodeWrapper()
+
+flat_wrappers = dict()
+flat_wrappers[ast.Assign] = RFFlatAssignWrapper
+flat_wrappers['generic'] = RFFlatWrapper
 
 
 # Finds the rf_ast for the given method name, or generates it if it does not exist
@@ -38,13 +44,23 @@ def install_metalink(metalink, rf_node):
     metalink.link_to_hook(rf_node.hook)
 
 
-def link(metalink, rf_node):
+def old_link(metalink, rf_node):
+    metalink.compile()
     rf_method = rf_node.method_node.reflective_method
     if not rf_method.has_wrappers():
         wrap_node(rf_node.method_node)
 
     wrap_node(rf_node)
     install_metalink(metalink, rf_node)
+
+
+def link(metalink, rf_node):
+    rf_method = rf_node.method_node.reflective_method
+    if not rf_method.has_wrappers():
+        wrap_node(rf_node.method_node)
+
+    rf_node.links.add(metalink)
+    rf_node.method_node.reflective_method.invalidate()
 
 
 def wrap_node(rf_node):

@@ -2,24 +2,25 @@ from compiler.ast_tools import *
 
 
 def before(metaobject, selector):
-    return BeforeLink(metaobject, selector)
+    return BeforeLink(metaobject, selector, None, [])
 
 
 def after(metaobject, selector):
-    return AfterLink(metaobject, selector)
+    return AfterLink(metaobject, selector, None, [])
 
 
 def instead(metaobject, selector):
-    return InsteadLink(metaobject, selector)
+    return InsteadLink(metaobject, selector, None, [])
 
 
 class MetaLink:
-    def __init__(self, metaobject, selector):
+    def __init__(self, metaobject, selector, control, args):
         self.metaobject = metaobject
         self.selector = selector
+        self.control = control
+        self.args = args  # rename later as arguments
         self.arguments = []
         self.arguments.append(ast.Name(id='reifications', ctx=ast.Load()))
-        self.compile()
 
     def compile(self):
         metaobject_node = ast.Const(self.metaobject)
