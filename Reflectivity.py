@@ -1,18 +1,26 @@
-from compiler.RFAstBuilder import RFAstBuilder
-from compiler.ReflectiveMethod import ReflectiveMethod
-from wrappers.RFAssignWrapper import *
-from wrappers.RFMethodNodeWrapper import RFMethodNodeWrapper
-from flat_wrappers.RFFlatWrapper import RFFlatWrapper
-from flat_wrappers.RFFlatAssignWrapper import RFFlatAssignWrapper
+import ast
+from core.RFAstBuilder import RFAstBuilder
+from core.ReflectiveMethod import ReflectiveMethod
+from wrappers.RFFlatWrapper import RFFlatWrapper
+from wrappers.RFAssignFlatWrapper import RFAssignFlatWrapper
+from wrappers.RFReturnFlatWrapper import RFReturnFlatWrapper
+from wrappers.RFMethodFlatWrapper import RFMethodFlatWrapper
+from wrappers.RFCFlowFlatWrapper import RFCFlowFlatWrapper
+
 
 rf_methods = dict()
-wrappers = dict()
-wrappers[ast.Assign] = RFAssignWrapper()
-wrappers[ast.Module] = RFMethodNodeWrapper()
 
 flat_wrappers = dict()
-flat_wrappers[ast.Assign] = RFFlatAssignWrapper
+flat_wrappers[ast.Assign] = RFAssignFlatWrapper
+flat_wrappers[ast.Return] = RFReturnFlatWrapper
+flat_wrappers[ast.Module] = RFMethodFlatWrapper
+flat_wrappers[ast.If] = RFCFlowFlatWrapper
+flat_wrappers[ast.While] = RFCFlowFlatWrapper
+flat_wrappers[ast.For] = RFCFlowFlatWrapper
 flat_wrappers['generic'] = RFFlatWrapper
+
+metalinks = set()
+nodes_with_links = set()
 
 
 # Finds the rf_ast for the given method name, or generates it if it does not exist
@@ -23,7 +31,7 @@ def rf_ast_for_method(class_or_object, method_name):
 def reflective_method_for(class_or_object, method_name):
     rf_key = (class_or_object, method_name)
 
-    if not (is_method_reflective(rf_key)):
+    if not (rf_key in rf_methods.keys()):
         method = getattr(class_or_object, method_name)
         rf_ast = RFAstBuilder().rf_ast_for_method(class_or_object, method, method_name)
         rf_method = ReflectiveMethod(rf_ast, class_or_object)
@@ -32,44 +40,25 @@ def reflective_method_for(class_or_object, method_name):
     return rf_methods.get(rf_key)
 
 
-def is_method_reflective(rf_key):
-    return rf_key in rf_methods.keys()
-
-
-def is_node_wrapped(rf_node):
-    return rf_node.method_node.reflective_method.is_node_wrapped(rf_node)
-
-
-def install_metalink(metalink, rf_node):
-    metalink.link_to_hook(rf_node.hook)
-
-
-def old_link(metalink, rf_node):
-    metalink.compile()
-    rf_method = rf_node.method_node.reflective_method
-    if not rf_method.has_wrappers():
-        wrap_node(rf_node.method_node)
-
-    wrap_node(rf_node)
-    install_metalink(metalink, rf_node)
-
-
 def link(metalink, rf_node):
-    rf_method = rf_node.method_node.reflective_method
-    if not rf_method.has_wrappers():
-        wrap_node(rf_node.method_node)
+    metalinks.add(metalink)
+    nodes_with_links.add(rf_node)
 
+    metalink.add_node(rf_node)
     rf_node.links.add(metalink)
     rf_node.method_node.reflective_method.invalidate()
 
 
-def wrap_node(rf_node):
-    if is_node_wrapped(rf_node):
-        return
+def uninstall_all():
+    for metalink in metalinks:
+        for node in metalink.nodes:
+            metalink.remove_node(node)
 
-    wrapper = wrappers[rf_node.__class__]
-    wrapper.method_node = rf_node.method_node
-    wrapper_node = wrapper.wrap(rf_node)
-    wrapper_node.reflective_method.wrapper_for_node(wrapper_node, rf_node)
-    rf_method = rf_node.method_node.reflective_method
-    rf_method.recompile()
+    for node in nodes_with_links:
+        node.links.clear()
+
+    metalinks.clear()
+    nodes_with_links.clear()
+
+    for rf_method in rf_methods.values():
+        rf_method.restore()
