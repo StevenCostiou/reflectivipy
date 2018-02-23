@@ -1,5 +1,5 @@
+import ast
 from RFCFlowFlatWrapper import RFCFlowFlatWrapper
-from RFFlatWrapper import rf_ast
 
 
 class RFMethodFlatWrapper(RFCFlowFlatWrapper, object):
@@ -20,7 +20,7 @@ class RFMethodFlatWrapper(RFCFlowFlatWrapper, object):
             self.after_links = list()
 
     def is_return(self, rf_node):
-        return rf_node.__class__ == rf_ast.Return
+        return rf_node.__class__ == ast.Return
 
     def extract_body(self):
         return self.original_node.body[0].body

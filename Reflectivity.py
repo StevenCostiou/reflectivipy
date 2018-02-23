@@ -1,16 +1,14 @@
 import ast
 from core.RFAstBuilder import RFAstBuilder
 from core.ReflectiveMethod import ReflectiveMethod
+
 from wrappers.RFFlatWrapper import RFFlatWrapper
 from wrappers.RFAssignFlatWrapper import RFAssignFlatWrapper
 from wrappers.RFReturnFlatWrapper import RFReturnFlatWrapper
 from wrappers.RFMethodFlatWrapper import RFMethodFlatWrapper
 from wrappers.RFCFlowFlatWrapper import RFCFlowFlatWrapper
+from wrappers import flat_wrappers
 
-
-rf_methods = dict()
-
-flat_wrappers = dict()
 flat_wrappers[ast.Assign] = RFAssignFlatWrapper
 flat_wrappers[ast.Return] = RFReturnFlatWrapper
 flat_wrappers[ast.Module] = RFMethodFlatWrapper
@@ -18,6 +16,8 @@ flat_wrappers[ast.If] = RFCFlowFlatWrapper
 flat_wrappers[ast.While] = RFCFlowFlatWrapper
 flat_wrappers[ast.For] = RFCFlowFlatWrapper
 flat_wrappers['generic'] = RFFlatWrapper
+
+rf_methods = dict()
 
 metalinks = set()
 nodes_with_links = set()

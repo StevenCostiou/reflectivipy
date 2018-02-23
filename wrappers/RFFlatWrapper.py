@@ -1,4 +1,5 @@
-from core import ast_tools as rf_ast
+import ast
+from core.RFAstBuilder import RFAstBuilder
 
 
 class RFFlatWrapper:
@@ -12,6 +13,8 @@ class RFFlatWrapper:
         self.original_node = rf_node
         self.reifications = set()
         self.node_transformation = list()
+        self.builder = RFAstBuilder()
+        self.builder.method_node = self.original_node.method_node
 
     def reset_wrapping(self):
         self.body = list()
@@ -41,13 +44,13 @@ class RFFlatWrapper:
 
         arguments = list()
         for arg in link.arguments:
-            arguments.append(rf_ast.ast_load(arg))
+            arguments.append(self.builder.ast_load(arg))
 
-        metaobject_node = rf_ast.Const(metaobject)
-        attr_node = rf_ast.Attribute(value=metaobject_node, attr=selector, ctx=rf_ast.Load())
-        call_node = rf_ast.Call(func=attr_node, args=arguments, keywords=[])
+        metaobject_node = ast.Const(metaobject)
+        attr_node = ast.Attribute(value=metaobject_node, attr=selector, ctx=ast.Load())
+        call_node = ast.Call(func=attr_node, args=arguments, keywords=[])
 
-        return rf_ast.Expr(call_node)
+        return ast.Expr(call_node)
 
     def sort_links(self):
         for link in self.original_node.links:
@@ -114,3 +117,6 @@ class RFFlatWrapper:
     def append_links(self, links):
         for link in links:
             self.body.append(self.gen_link_node(link))
+
+    def reify_name(self, name):
+        return name + '_' + str(self.original_node.rf_id)
