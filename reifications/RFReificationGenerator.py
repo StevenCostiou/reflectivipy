@@ -5,6 +5,7 @@ import RFReification
 class RFReificationGenerator(object):
     def __init__(self):
         self.builder = core.RFAstBuilder.RFAstBuilder()
+        self.reification_counter = 0
 
     def generate_reifications(self, rf_node):
         expressions = list()
@@ -15,7 +16,7 @@ class RFReificationGenerator(object):
                 reification = RFReification.reification_for(arg, link).visit_node(rf_node)
                 rf_name = self.rf_name_for_arg(arg, str(rf_node.rf_id))
                 expressions.append(self.builder.assign_named_value(rf_name, reification))
-                self.add_reified_argument_to_link(self.builder.ast_load(rf_name))
+                self.add_reified_argument_to_link(self.builder.ast_load(rf_name), link)
         return expressions
 
     def add_reified_argument_to_link(self, arg_node, metalink):
@@ -25,4 +26,5 @@ class RFReificationGenerator(object):
         if isinstance(arg, basestring):
             return arg + '_' + rf_id
 
-        return 'value_' + rf_id
+        self.reification_counter = self.reification_counter + 1
+        return 'value_' + rf_id + '_' + str(self.reification_counter)

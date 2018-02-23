@@ -1,4 +1,5 @@
 import ast
+import collections
 
 
 class RFReification(object):
@@ -38,7 +39,7 @@ reifications = dict()
 reifications['class'] = RFClassReification
 reifications['node'] = RFNodeReification
 reifications['object'] = RFObjectReification
-reifications['method'] = RFClassReification
+reifications['method'] = RFMethodReification
 
 reifications['name'] = RFClassReification
 reifications['receiver'] = RFClassReification
@@ -50,7 +51,7 @@ reifications['value'] = RFClassReification
 
 def reification_for(key, metalink):
     if key in reifications:
-        return reifications[key]
+        return reifications[key]()
     if key == 'link':
         return RFConstReification(metalink)
     return RFConstReification(key)

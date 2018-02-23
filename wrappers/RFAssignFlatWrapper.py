@@ -5,7 +5,7 @@ from RFFlatWrapper import RFFlatWrapper
 class RFAssignFlatWrapper(RFFlatWrapper):
     def flatten_children(self):
         value_assign = self.builder.assign_named_value(self.reify_name('value'), self.original_node.value)
-        self.flattened_children.append(value_assign)
+        self.flattened_children.append(self.builder.build_rf_node(value_assign))
 
     def transform_node(self):
         targets = self.original_node.targets

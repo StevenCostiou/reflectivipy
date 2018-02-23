@@ -12,8 +12,7 @@ class RFAstBuilder:
 
     def assign_named_value(self, name, value):
         value_store = self.ast_store(name)
-        value_assign = self.ast_assign(value_store, value)
-        return self.build_rf_node(value_assign)
+        return self.ast_assign(value_store, value)
 
     def ast_assign(self, store_node, value_node):
         return ast.Assign(targets=[store_node], value=value_node)

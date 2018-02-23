@@ -9,7 +9,7 @@ class RFReturnFlatWrapper(RFFlatWrapper, object):
 
     def transform_node(self):
         value_assign = self.builder.assign_named_value(self.reify_name('return'), self.original_node.value)
-        self.node_transformation.append(value_assign)
+        self.node_transformation.append(self.builder.build_rf_node(value_assign))
 
     def basic_wrap(self):
         super(RFReturnFlatWrapper, self).basic_wrap()
