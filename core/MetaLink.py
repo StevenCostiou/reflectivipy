@@ -5,6 +5,7 @@ class MetaLink:
         self.control = control
         self.nodes = list()
         self.arguments = args
+        self.reified_arguments = list()
 
     def add_node(self, rf_node):
         self.nodes.append(rf_node)
@@ -12,3 +13,6 @@ class MetaLink:
     def remove_node(self, rf_node):
         self.nodes.remove(rf_node)
         rf_node.links.remove(self)
+
+    def reset_reified_arguments(self):
+        self.reified_arguments = list()

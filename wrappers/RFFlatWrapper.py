@@ -1,5 +1,6 @@
 import ast
 from core.RFAstBuilder import RFAstBuilder
+from reifications.RFReificationGenerator import RFReificationGenerator
 
 
 class RFFlatWrapper:
@@ -15,6 +16,7 @@ class RFFlatWrapper:
         self.node_transformation = list()
         self.builder = RFAstBuilder()
         self.builder.method_node = self.original_node.method_node
+        self.reifyer = RFReificationGenerator()
 
     def reset_wrapping(self):
         self.body = list()
@@ -26,11 +28,8 @@ class RFFlatWrapper:
         self.node_transformation = list()
 
     def gen_preambles(self):
-        for link in self.original_node.links:
-            self.gen_reifications(link)
-
-    def gen_reifications(self, link):
-        pass
+        preambles = self.reifyer.generate_reifications(self.original_node)
+        self.preambles.extend(preambles)
 
     def flatten_children(self):
         pass
