@@ -1,5 +1,6 @@
 import inspect
 import ast
+from core.RFAstTwinBuilder import RFAstTwinBuilder
 from wrappers import flat_wrappers
 # Extends the PyPy ast with Reflectivity attributes.
 # The base node is a MethodNode (for every function or method).
@@ -43,6 +44,7 @@ class RFAstBuilder:
         self.method_node = node
         self.method_node.is_method = True
         self.visit_node(self.method_node)
+        RFAstTwinBuilder().build_twins(node)
         return node
 
     def visit_node(self, node):
@@ -63,11 +65,14 @@ class RFAstBuilder:
         if not node == self.method_node:
             node.is_method = False
 
-        node.method_node = self.method_node
-        node.wrapping_method_node = self.method_node
-
         node.rf_id = self.current_index
         self.current_index += 1
+
+        node.can_be_wrapped = True
+        node.temp_name = 'temp_' + node.__class__.__name__ + '_' + str(node.rf_id)
+
+        node.method_node = self.method_node
+        node.wrapping_method_node = self.method_node
 
         node.method_class = self.method_node.method_class
         node.links = set()

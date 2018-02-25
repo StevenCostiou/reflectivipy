@@ -62,6 +62,7 @@ class RFFlatWrapper:
 
     def flat_wrap(self):
         self.reset_wrapping()
+        self.gen_preambles()
         self.sort_links()
 
         if not self.should_wrap(self.original_node):
@@ -74,7 +75,6 @@ class RFFlatWrapper:
     def init_wrapping(self):
         self.flatten_children()
         self.transform_node()
-        self.gen_preambles()
 
     def basic_wrap(self):
         self.append_flattened_children()
@@ -117,5 +117,3 @@ class RFFlatWrapper:
         for link in links:
             self.body.append(self.gen_link_node(link))
 
-    def reify_name(self, name):
-        return name + '_' + str(self.original_node.rf_id)

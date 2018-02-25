@@ -1,5 +1,4 @@
 import ast
-import collections
 
 
 class RFReification(object):

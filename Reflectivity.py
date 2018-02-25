@@ -1,5 +1,4 @@
 import ast
-from core.RFAstBuilder import RFAstBuilder
 from core.ReflectiveMethod import ReflectiveMethod
 
 from wrappers.RFFlatWrapper import RFFlatWrapper
@@ -7,6 +6,8 @@ from wrappers.RFAssignFlatWrapper import RFAssignFlatWrapper
 from wrappers.RFReturnFlatWrapper import RFReturnFlatWrapper
 from wrappers.RFMethodFlatWrapper import RFMethodFlatWrapper
 from wrappers.RFCFlowFlatWrapper import RFCFlowFlatWrapper
+from wrappers.RFCompareFlatWrapper import RFCompareFlatWrapper
+from wrappers.RFLiteralFlatWrapper import RFLiteralFlatWrapper
 from wrappers import flat_wrappers
 
 flat_wrappers[ast.Assign] = RFAssignFlatWrapper
@@ -15,6 +16,10 @@ flat_wrappers[ast.Module] = RFMethodFlatWrapper
 flat_wrappers[ast.If] = RFCFlowFlatWrapper
 flat_wrappers[ast.While] = RFCFlowFlatWrapper
 flat_wrappers[ast.For] = RFCFlowFlatWrapper
+flat_wrappers[ast.Compare] = RFCompareFlatWrapper
+flat_wrappers[ast.Num] = RFLiteralFlatWrapper
+flat_wrappers[ast.Str] = RFLiteralFlatWrapper
+flat_wrappers[ast.Name] = RFLiteralFlatWrapper
 flat_wrappers['generic'] = RFFlatWrapper
 
 rf_methods = dict()
@@ -33,8 +38,7 @@ def reflective_method_for(class_or_object, method_name):
 
     if not (rf_key in rf_methods.keys()):
         method = getattr(class_or_object, method_name)
-        rf_ast = RFAstBuilder().rf_ast_for_method(class_or_object, method, method_name)
-        rf_method = ReflectiveMethod(rf_ast, class_or_object)
+        rf_method = ReflectiveMethod(class_or_object, method, method_name)
         rf_methods[rf_key] = rf_method
         return rf_method
     return rf_methods.get(rf_key)
@@ -62,3 +66,4 @@ def uninstall_all():
 
     for rf_method in rf_methods.values():
         rf_method.restore()
+
