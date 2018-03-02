@@ -3,7 +3,11 @@ import ast
 
 class RFReification(object):
     def visit_node(self, rf_node):
-        pass
+        return self.visit_method(rf_node)(rf_node)
+
+    def visit_method(self, rf_node):
+        visit_method = 'visit_' + rf_node.__class__.__name__
+        return getattr(self, visit_method)
 
 
 class RFConstReification(RFReification, object):
@@ -31,7 +35,56 @@ class RFNodeReification(RFReification, object):
 
 class RFMethodReification(RFReification, object):
     def visit_node(self, rf_node):
-        return RFConstReification(rf_node.method_node.method_name).visit_node(rf_node)
+        method = rf_node.method_node.reflective_method.target_entity
+        method_name = rf_node.method_node.method_name
+        return RFConstReification(getattr(method, method_name)).visit_node(rf_node)
+
+
+class RFSenderReification(RFReification, object):
+    def visit_node(self, rf_node):
+        method_name = rf_node.method_node.method_name
+        return RFConstReification(method_name).visit_node(rf_node)
+
+
+class RFReceiverReification(RFReification, object):
+    def visit_node(self, rf_node):
+        return ast.Name(id=rf_node.func.value.temp_name, ctx=ast.Load())
+
+
+class RFSelectorReification(RFReification, object):
+    def visit_node(self, rf_node):
+        return ast.Str(rf_node.func.attr)
+
+
+class RFValueReification(RFReification, object):
+    def visit_Assign(self, assign_node):
+        return ast.Name(id=assign_node.targets[0].id, ctx=ast.Load())
+
+    def visit_Name(self, name):
+        return name
+
+
+class RFOldValueReification(RFValueReification, object):
+    def visit_Assign(self, assign_node):
+        return ast.Name(id=assign_node.targets[0].id, ctx=ast.Load())
+
+
+class RFNewValueReification(RFValueReification, object):
+    def visit_Assign(self, assign_node):
+        return ast.Name(id=assign_node.temp_name, ctx=ast.Load())
+
+
+class RFNameReification(RFReification, object):
+    def visit_Assign(self, assign_node):
+        return self.visit_Name(assign_node.targets[0])
+
+    def visit_Name(self, name_node):
+        return ast.Str(name_node.id)
+
+
+class RFArgumentReification(RFReification, object):
+    def visit_node(self, rf_node):
+        return rf_node.func.value
 
 
 reifications = dict()
@@ -39,13 +92,17 @@ reifications['class'] = RFClassReification
 reifications['node'] = RFNodeReification
 reifications['object'] = RFObjectReification
 reifications['method'] = RFMethodReification
+reifications['sender'] = RFSenderReification
+reifications['receiver'] = RFReceiverReification
+reifications['selector'] = RFSelectorReification
 
-reifications['name'] = RFClassReification
-reifications['receiver'] = RFClassReification
-reifications['sender'] = RFClassReification
-reifications['arguments'] = RFClassReification
-reifications['selector'] = RFClassReification
-reifications['value'] = RFClassReification
+reifications['name'] = RFNameReification
+
+reifications['value'] = RFValueReification
+reifications['old_value'] = RFOldValueReification
+reifications['new_value'] = RFNewValueReification
+
+reifications['arguments'] = RFArgumentReification
 
 
 def reification_for(key, metalink):

@@ -1,6 +1,6 @@
 import inspect
 import ast
-from core.RFAstTwinBuilder import RFAstTwinBuilder
+import copy
 from wrappers import flat_wrappers
 # Extends the PyPy ast with Reflectivity attributes.
 # The base node is a MethodNode (for every function or method).
@@ -10,6 +10,7 @@ class RFAstBuilder:
     def __init__(self):
         self.method_node = None
         self.current_index = 1
+        self.flattened_nodes = dict()
 
     def assign_named_value(self, name, value):
         value_store = self.ast_store(name)
@@ -22,7 +23,12 @@ class RFAstBuilder:
         return ast.Name(id=var_name, ctx=ast.Store())
 
     def ast_load(self, var_name):
-        return ast.Name(id=var_name, ctx=ast.Load())
+        load = ast.Name(id=var_name, ctx=ast.Load())
+        load.temp_name = var_name
+        return load
+
+    def ast_expr(self, node):
+        return ast.Expr(node)
 
     def get_method_source(self, method):
         lines = inspect.getsourcelines(method)
@@ -44,8 +50,15 @@ class RFAstBuilder:
         self.method_node = node
         self.method_node.is_method = True
         self.visit_node(self.method_node)
-        RFAstTwinBuilder().build_twins(node)
+        self.visit_twins(copy.deepcopy(node))
         return node
+
+    def visit_twins(self, copy_node):
+        for node in ast.iter_child_nodes(copy_node):
+            original_node = self.flattened_nodes[node.rf_id]
+            node.method_node = original_node.method_node
+            original_node.twin = node
+            self.visit_twins(node)
 
     def visit_node(self, node):
         self.decorate_node(node)
@@ -65,14 +78,16 @@ class RFAstBuilder:
         if not node == self.method_node:
             node.is_method = False
 
+        node.is_generated = False
+
         node.rf_id = self.current_index
+        self.flattened_nodes[node.rf_id] = node
         self.current_index += 1
 
         node.can_be_wrapped = True
         node.temp_name = 'temp_' + node.__class__.__name__ + '_' + str(node.rf_id)
 
         node.method_node = self.method_node
-        node.wrapping_method_node = self.method_node
 
         node.method_class = self.method_node.method_class
         node.links = set()

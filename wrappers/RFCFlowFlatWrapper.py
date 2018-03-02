@@ -6,9 +6,6 @@ from RFCFlowConditionExtractor import RFCFlowConditionExtractor
 class RFCFlowFlatWrapper(RFFlatWrapper, object):
     def __init__(self, rf_node):
         super(RFCFlowFlatWrapper, self).__init__(rf_node)
-        # self.copy_node = self.original_node.twin
-        # self.copy_node = copy.deepcopy(rf_node)
-        # self.original_node.twin = self.copy_node
 
     def extract_body(self):
         return self.original_node.body

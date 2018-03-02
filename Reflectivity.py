@@ -8,6 +8,8 @@ from wrappers.RFMethodFlatWrapper import RFMethodFlatWrapper
 from wrappers.RFCFlowFlatWrapper import RFCFlowFlatWrapper
 from wrappers.RFCompareFlatWrapper import RFCompareFlatWrapper
 from wrappers.RFLiteralFlatWrapper import RFLiteralFlatWrapper
+from wrappers.RFExprFlatWrapper import RFExprFlatWrapper
+from wrappers.RFCallFlatWrapper import RFCallFlatWrapper
 from wrappers import flat_wrappers
 
 flat_wrappers[ast.Assign] = RFAssignFlatWrapper
@@ -20,6 +22,8 @@ flat_wrappers[ast.Compare] = RFCompareFlatWrapper
 flat_wrappers[ast.Num] = RFLiteralFlatWrapper
 flat_wrappers[ast.Str] = RFLiteralFlatWrapper
 flat_wrappers[ast.Name] = RFLiteralFlatWrapper
+flat_wrappers[ast.Expr] = RFExprFlatWrapper
+flat_wrappers[ast.Call] = RFCallFlatWrapper
 flat_wrappers['generic'] = RFFlatWrapper
 
 rf_methods = dict()

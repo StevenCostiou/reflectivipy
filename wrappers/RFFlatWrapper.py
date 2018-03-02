@@ -85,13 +85,17 @@ class RFFlatWrapper:
         return self.body
 
     def should_wrap(self, rf_node):
+        return self.should_wrap_node(rf_node) or self.should_wrap_children(rf_node)
+
+    def should_wrap_node(self, rf_node):
         if rf_node.links:
             return True
+        return False
 
+    def should_wrap_children(self, rf_node):
         for node in rf_node.children:
             if self.should_wrap(node):
                 return True
-
         return False
 
     def append_preambles(self):
