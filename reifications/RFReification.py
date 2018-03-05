@@ -83,8 +83,23 @@ class RFNameReification(RFReification, object):
 
 
 class RFArgumentReification(RFReification, object):
-    def visit_node(self, rf_node):
-        return rf_node.func.value
+    def visit_Module(self, rf_node):
+        return self.visit_FunctionDef(rf_node.body[0])
+
+    def visit_FunctionDef(self, rf_node):
+        args = list()
+        for arg in rf_node.args.args:
+            if not arg.id == 'self':
+                args.append(ast.Name(id=arg.id, ctx=ast.Load()))
+
+        return ast.List(elts=args, ctx=ast.Load())
+
+    def visit_Call(self, rf_node):
+        args = list()
+        for arg in rf_node.args:
+            args.append(ast.Name(id=arg.id, ctx=ast.Load()))
+
+        return ast.List(elts=args, ctx=ast.Load())
 
 
 reifications = dict()
@@ -95,13 +110,10 @@ reifications['method'] = RFMethodReification
 reifications['sender'] = RFSenderReification
 reifications['receiver'] = RFReceiverReification
 reifications['selector'] = RFSelectorReification
-
 reifications['name'] = RFNameReification
-
 reifications['value'] = RFValueReification
 reifications['old_value'] = RFOldValueReification
 reifications['new_value'] = RFNewValueReification
-
 reifications['arguments'] = RFArgumentReification
 
 
