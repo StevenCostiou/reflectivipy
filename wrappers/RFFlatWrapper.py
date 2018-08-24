@@ -42,8 +42,7 @@ class RFFlatWrapper:
         selector = link.selector
 
         arguments = list()
-        for arg in link.reified_arguments:
-            arguments.append(arg)
+        arguments.extend(link.reified_arguments)
 
         metaobject_node = ast.Const(metaobject)
         attr_node = ast.Attribute(value=metaobject_node, attr=selector, ctx=ast.Load())

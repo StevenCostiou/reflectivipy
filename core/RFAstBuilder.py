@@ -12,6 +12,9 @@ class RFAstBuilder:
         self.current_index = 1
         self.flattened_nodes = dict()
 
+    def ast_load_list(self, args_list):
+        return ast.List(elts=args_list, ctx=ast.Load())
+
     def assign_named_value(self, name, value):
         value_store = self.ast_store(name)
         return self.ast_assign(value_store, value)
