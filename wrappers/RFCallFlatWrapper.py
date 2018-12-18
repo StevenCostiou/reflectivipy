@@ -8,7 +8,7 @@ class RFCallFlatWrapper(RFFlatWrapper):
 
     def transform_node(self):
         twin = self.original_node.twin
-        new_args = list()
+        new_args = []
         for arg in self.original_node.args:
             new_args.append(self.builder.ast_load(arg.temp_name))
 

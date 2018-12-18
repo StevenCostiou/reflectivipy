@@ -6,10 +6,10 @@ class RFReificationGenerator(object):
     def __init__(self):
         self.builder = core.RFAstBuilder.RFAstBuilder()
         self.reification_counter = 0
-        self.arg_list = list()
+        self.arg_list = []
 
     def generate_reifications(self, rf_node):
-        expressions = list()
+        expressions = []
 
         for link in rf_node.links:
             link.reset_reified_arguments()
@@ -22,7 +22,7 @@ class RFReificationGenerator(object):
 
             if link.option_arg_as_array:
                 link.reified_arguments.append(self.builder.ast_load_list(self.arg_list))
-                self.arg_list = list()
+                self.arg_list = []
 
         return expressions
 

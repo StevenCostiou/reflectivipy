@@ -20,7 +20,7 @@ class RFCFlowFlatWrapper(RFFlatWrapper, object):
         return True
 
     def transform_body(self):
-        transformations = list()
+        transformations = []
         for node in self.extract_body():
             if hasattr(node, 'can_be_wrapped'):
                 body_transformation = node.wrapper.flat_wrap()

@@ -1,7 +1,6 @@
 import inspect
 import ast
 import copy
-from wrappers import flat_wrappers
 # Extends the PyPy ast with Reflectivity attributes.
 # The base node is a MethodNode (for every function or method).
 
@@ -95,6 +94,7 @@ class RFAstBuilder:
         node.method_class = self.method_node.method_class
         node.links = set()
 
+        from wrappers import flat_wrappers
         if node.__class__ in flat_wrappers:
             node.wrapper = flat_wrappers[node.__class__](node)
         else:

@@ -2,12 +2,12 @@ import copy
 from RFFlatWrapper import RFFlatWrapper
 
 
-class RFCompareFlatWrapper(RFFlatWrapper, object):
+class RFCompareFlatWrapper(RFFlatWrapper):
     def transform_node(self):
         # TODO : node transformation here
         self.original_node.twin.left = self.builder.ast_load(self.original_node.left.temp_name)
 
-        comparators = list()
+        comparators = []
 
         for node in self.original_node.comparators:
             comparators.append(self.builder.ast_load(node.temp_name))

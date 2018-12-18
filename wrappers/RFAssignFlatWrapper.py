@@ -29,6 +29,6 @@ class RFAssignFlatWrapper(RFFlatWrapper):
         self.node_transformation.append(transformed_assign)
 
     def is_node_call_with_links(self, rf_node):
-        if not rf_node.__class__ == ast.Call:
+        if rf_node.__class__ is not ast.Call:
             return False
         return rf_node.wrapper.should_wrap(rf_node)

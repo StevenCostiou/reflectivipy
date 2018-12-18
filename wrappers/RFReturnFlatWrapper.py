@@ -2,10 +2,10 @@ import ast
 from RFFlatWrapper import RFFlatWrapper
 
 
-class RFReturnFlatWrapper(RFFlatWrapper, object):
+class RFReturnFlatWrapper(RFFlatWrapper):
     def __init__(self, rf_node):
         super(RFReturnFlatWrapper, self).__init__(rf_node)
-        self.additional_after_links = list()
+        self.additional_after_links = []
 
     def transform_node(self):
         value_assign = self.builder.assign_named_value(self.original_node.temp_name, self.original_node.value)

@@ -1,7 +1,7 @@
 from RFFlatWrapper import RFFlatWrapper
 
 
-class RFExprFlatWrapper(RFFlatWrapper, object):
+class RFExprFlatWrapper(RFFlatWrapper):
     def flat_wrap(self):
         self.reset_wrapping()
         if self.should_wrap_children(self.original_node):

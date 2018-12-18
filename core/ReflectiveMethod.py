@@ -22,7 +22,7 @@ class ReflectiveMethod(object):
         self.links.add(metalink)
 
     def compile_rf_method(self, rf_ast, method_name):
-        locs = dict()
+        locs = {}
         compiled_method = compile(rf_ast, "<ast>", 'exec')
         eval(compiled_method, {}, locs)
         setattr(self.target_entity, method_name, locs[method_name])

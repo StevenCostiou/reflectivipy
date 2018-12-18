@@ -3,9 +3,9 @@ class MetaLink:
         self.metaobject = metaobject
         self.selector = selector
         self.control = control
-        self.nodes = list()
+        self.nodes = []
         self.arguments = args
-        self.reified_arguments = list()
+        self.reified_arguments = []
         self.option_arg_as_array = False
 
     def add_node(self, rf_node):
@@ -16,7 +16,7 @@ class MetaLink:
         rf_node.links.remove(self)
 
     def reset_reified_arguments(self):
-        self.reified_arguments = list()
+        self.reified_arguments = []
 
     def set_args_as_array(self, a_bool):
         self.option_arg_as_array = a_bool

@@ -1,8 +1,8 @@
 class RFCFlowConditionExtractor(object):
     def __init__(self):
-        self.flattened_condition = list()
-        self.preambles = list()
-        self.body_supplements = list()
+        self.flattened_condition = []
+        self.preambles = []
+        self.body_supplements = []
 
     def visit_node(self, rf_node):
         visit_method = 'visit_' + rf_node.__class__.__name__

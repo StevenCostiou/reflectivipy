@@ -3,29 +3,29 @@ from core.RFAstBuilder import RFAstBuilder
 from reifications.RFReificationGenerator import RFReificationGenerator
 
 
-class RFFlatWrapper:
+class RFFlatWrapper(object):
     def __init__(self, rf_node):
-        self.body = list()
-        self.preambles = list()
-        self.flattened_children = list()
-        self.before_links = list()
-        self.after_links = list()
-        self.instead_links = list()
+        self.body = []
+        self.preambles = []
+        self.flattened_children = []
+        self.before_links = []
+        self.after_links = []
+        self.instead_links = []
         self.original_node = rf_node
         self.reifications = set()
-        self.node_transformation = list()
+        self.node_transformation = []
         self.builder = RFAstBuilder()
         self.builder.method_node = self.original_node.method_node
         self.reifyer = RFReificationGenerator()
 
     def reset_wrapping(self):
-        self.body = list()
-        self.preambles = list()
-        self.flattened_children = list()
-        self.before_links = list()
-        self.after_links = list()
-        self.instead_links = list()
-        self.node_transformation = list()
+        self.body = []
+        self.preambles = []
+        self.flattened_children = []
+        self.before_links = []
+        self.after_links = []
+        self.instead_links = []
+        self.node_transformation = []
 
     def gen_preambles(self):
         preambles = self.reifyer.generate_reifications(self.original_node)
@@ -41,7 +41,7 @@ class RFFlatWrapper:
         metaobject = link.metaobject
         selector = link.selector
 
-        arguments = list()
+        arguments = []
         arguments.extend(link.reified_arguments)
 
         metaobject_node = ast.Const(metaobject)
@@ -119,4 +119,3 @@ class RFFlatWrapper:
     def append_links(self, links):
         for link in links:
             self.body.append(self.gen_link_node(link))
-
