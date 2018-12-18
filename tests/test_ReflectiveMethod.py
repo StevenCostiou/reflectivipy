@@ -1,70 +1,74 @@
-import unittest
+import pytest
 
 import Reflectivity
-from tests.ReflectivityExample import ReflectivityExample
+from ReflectivityExample import ReflectivityExample
 from core.MetaLink import MetaLink
 
 
-class ReflectiveMethodTest(unittest.TestCase):
-    def setUp(self):
-        Reflectivity.uninstall_all()
+@pytest.fixture(autouse=True)
+def setup():
+    Reflectivity.uninstall_all()
 
-    def test_original_ast_preservation(self):
-        example = ReflectivityExample()
-        link = MetaLink(example, 'tag_exec', 'after', ['node'])
-        rf_ast = Reflectivity.reflective_method_for(ReflectivityExample, 'example_while')
-        original_body = rf_ast.original_ast.body[0].body
-        node = original_body[1].test.left
 
-        number_of_nodes = len(original_body)
-        original_left_id = node.id
+def test_original_ast_preservation():
+    example = ReflectivityExample()
+    link = MetaLink(example, 'tag_exec', 'after', ['node'])
+    rf_ast = Reflectivity.reflective_method_for(ReflectivityExample, 'example_while')
+    original_body = rf_ast.original_ast.body[0].body
+    node = original_body[1].test.left
 
-        Reflectivity.link(link, node)
+    number_of_nodes = len(original_body)
+    original_left_id = node.id
 
-        new_body = rf_ast.original_ast.body[0].body
-        new_left = new_body[1].test.left
-        reflective_ast_body = rf_ast.reflective_ast.body[0].body
+    Reflectivity.link(link, node)
 
-        ReflectivityExample().example_while()
-        self.assertIs(example.tag, node)
-        self.assertIs(new_body, original_body)
-        self.assertEquals(len(new_body), number_of_nodes)
-        self.assertEquals(original_left_id, new_left.id)
+    new_body = rf_ast.original_ast.body[0].body
+    new_left = new_body[1].test.left
+    reflective_ast_body = rf_ast.reflective_ast.body[0].body
 
-        self.assertIsNot(reflective_ast_body[1], new_body[1])
-        self.assertGreater(len(reflective_ast_body), number_of_nodes)
+    ReflectivityExample().example_while()
+    assert example.tag is node
+    assert new_body is original_body
+    assert len(new_body) == number_of_nodes
+    assert original_left_id == new_left.id
 
-    def test_restore_original(self):
-        example = ReflectivityExample()
-        link = MetaLink(example, 'tag_exec', 'after', ['node'])
-        rf_ast = Reflectivity.reflective_method_for(ReflectivityExample, 'example_while')
-        original_body = rf_ast.original_ast.body[0].body
-        node = original_body[1].test.left
+    assert reflective_ast_body[1] is not new_body[1]
+    assert len(reflective_ast_body) > number_of_nodes
 
-        Reflectivity.link(link, node)
 
-        example.tag = None
-        ReflectivityExample().example_while()
-        self.assertIs(example.tag, node)
+def test_restore_original():
+    example = ReflectivityExample()
+    link = MetaLink(example, 'tag_exec', 'after', ['node'])
+    rf_ast = Reflectivity.reflective_method_for(ReflectivityExample, 'example_while')
+    original_body = rf_ast.original_ast.body[0].body
+    node = original_body[1].test.left
 
-        Reflectivity.uninstall_all()
+    Reflectivity.link(link, node)
 
-        example.tag = None
-        ReflectivityExample().example_while()
-        self.assertIsNone(example.tag)
+    example.tag = None
+    ReflectivityExample().example_while()
+    assert example.tag is node
 
-    def test_uninstall_all(self):
-        pass
+    Reflectivity.uninstall_all()
 
-    def test_metalinks_count(self):
-        example = ReflectivityExample()
-        link = MetaLink(example, 'tag_exec_', 'before', [])
-        rf_method = Reflectivity.reflective_method_for(ReflectivityExample, 'example_assign')
-        node = rf_method.original_ast.body[0].body[0]
+    example.tag = None
+    ReflectivityExample().example_while()
+    assert example.tag is None
 
-        self.assertEqual(len(Reflectivity.metalinks), 0)
 
-        Reflectivity.link(link, node)
+def test_uninstall_all():
+    pass
 
-        self.assertEqual(len(Reflectivity.metalinks), 1)
-        self.assertIs(Reflectivity.metalinks.pop(), link)
+
+def test_metalinks_count():
+    example = ReflectivityExample()
+    link = MetaLink(example, 'tag_exec_', 'before', [])
+    rf_method = Reflectivity.reflective_method_for(ReflectivityExample, 'example_assign')
+    node = rf_method.original_ast.body[0].body[0]
+
+    assert len(Reflectivity.metalinks) == 0
+
+    Reflectivity.link(link, node)
+
+    len(Reflectivity.metalinks) == 1
+    assert Reflectivity.metalinks.pop() is link

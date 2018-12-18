@@ -6,8 +6,8 @@ from core.MetaLink import MetaLink
 from wrappers.RFFlatWrapper import RFFlatWrapper
 
 
-@pytest.fixture(scope="module")
-def setup(self):
+@pytest.fixture(autouse=True)
+def setup():
     Reflectivity.uninstall_all()
 
 

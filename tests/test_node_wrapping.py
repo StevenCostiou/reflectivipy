@@ -1,122 +1,137 @@
-import unittest
+import pytest
 import ast
 import ReflectivityExample
 import Reflectivity
 from core.MetaLink import MetaLink
 
 
-class TestNodeWrapping(unittest.TestCase):
-    def setUp(self):
-        Reflectivity.uninstall_all()
+@pytest.fixture(autouse=True)
+def setup():
+    Reflectivity.uninstall_all()
 
-    def test_wrap_expr(self):
-        node = ReflectivityExample.expr_sample_node()
 
-        self.assertEquals(node.__class__, ast.Expr)
-        transformation = node.wrapper.flat_wrap()
-        self.assertEquals(len(transformation), 1)
-        self.assertIs(transformation[0], node)
+def test_wrap_expr():
+    node = ReflectivityExample.expr_sample_node()
 
-        link = MetaLink(ReflectivityExample.ReflectivityExample(), 'tag_exec_', 'before', [])
-        node.links.add(link)
+    assert type(node) is ast.Expr
 
-        self.assertEquals(node.__class__, ast.Expr)
-        transformation = node.wrapper.flat_wrap()
-        self.assertEquals(len(transformation), 1)
-        self.assertIs(transformation[0], node)
+    transformation = node.wrapper.flat_wrap()
+    assert len(transformation) == 1
+    assert transformation[0] is node
 
-    def test_wrap_call(self):
-        node = ReflectivityExample.call_sample_node().value
+    link = MetaLink(ReflectivityExample.ReflectivityExample(), 'tag_exec_', 'before', [])
+    node.links.add(link)
 
-        self.assertEquals(node.__class__, ast.Call)
-        transformation = node.wrapper.flat_wrap()
-        self.assertEquals(len(transformation), 1)
-        self.assertIs(transformation[0], node)
+    assert type(node) is ast.Expr
+    transformation = node.wrapper.flat_wrap()
+    assert len(transformation) == 1
+    assert transformation[0] is node
 
-        link = MetaLink(ReflectivityExample.ReflectivityExample(), 'tag_exec_', 'before', [])
-        node.links.add(link)
 
-        self.assertEquals(node.__class__, ast.Call)
-        transformation = node.wrapper.flat_wrap()
-        self.assertEquals(len(transformation), 4)
-        self.assertEquals(transformation[0].__class__, ast.Assign)
-        self.assertIs(transformation[0].value, node.args[0])
-        self.assertIsNot(transformation[0], node)
-        self.assertEquals(len(transformation[3].value.args), 1)
-        self.assertEquals(transformation[3].value.args[0].__class__, ast.Name)
-        self.assertEquals(transformation[3].value.args[0].id, node.args[0].temp_name)
-        self.assertEquals(transformation[3].value.func.value.id, node.func.value.temp_name)
+def test_wrap_call():
+    node = ReflectivityExample.call_sample_node().value
 
-    def test_wrap_call_in_assign(self):
-        node = ReflectivityExample.method_with_args_sample_node().body[0].body[0]
+    assert type(node) is ast.Call
 
-        link = MetaLink(ReflectivityExample.ReflectivityExample(), 'tag_exec_', 'before', [])
-        node.value.links.add(link)
+    transformation = node.wrapper.flat_wrap()
+    assert len(transformation) == 1
+    assert transformation[0] is node
 
-        self.assertEquals(node.__class__, ast.Assign)
-        self.assertEquals(node.value.__class__, ast.Call)
-        transformation = node.wrapper.flat_wrap()
-        self.assertEquals(len(transformation), 5)
-        self.assertEquals(transformation[0].__class__, ast.Assign)
-        self.assertIs(transformation[0].value, node.value.args[0])
-        self.assertEquals(transformation[1].__class__, ast.Assign)
-        self.assertEquals(transformation[1].value.id, 'self')
-        self.assertIsNot(transformation[0], node)
-        self.assertEquals(len(transformation[3].value.args), 1)
-        self.assertEquals(transformation[3].value.args[0].__class__, ast.Name)
-        self.assertEquals(transformation[3].value.args[0].id, node.value.args[0].temp_name)
-        self.assertEquals(transformation[3].value.func.value.id, node.value.func.value.temp_name)
+    link = MetaLink(ReflectivityExample.ReflectivityExample(), 'tag_exec_', 'before', [])
+    node.links.add(link)
 
-    def test_wrap_complex_expr_call(self):
-        node = ReflectivityExample.complex_expr_call_sample_node()
+    assert type(node) is ast.Call
 
-        link = MetaLink(ReflectivityExample.ReflectivityExample(), 'tag_exec_', 'before', [])
-        node.value.args[0].links.add(link)
+    transformation = node.wrapper.flat_wrap()
+    assert len(transformation) == 4
+    assert type(transformation[0]) is ast.Assign
+    assert transformation[0].value is node.args[0]
+    assert transformation[0] is not node
 
-        transformation = node.wrapper.flat_wrap()
-        self.assertEquals(len(transformation), 6)
-        self.assertEquals(transformation[3].__class__, ast.Assign)
-        self.assertEquals(transformation[3].value.rf_id, node.value.args[0].rf_id)
-        self.assertIsNot(transformation[3], node)
+    assert len(transformation[3].value.args) == 1
+    assert type(transformation[3].value.args[0]) is ast.Name
+    assert transformation[3].value.args[0].id is node.args[0].temp_name
+    assert transformation[3].value.func.value.id is node.func.value.temp_name
 
-    def test_call_receiver_flattening(self):
-        node = ReflectivityExample.call_with_complex_receiver_sample_node()
-        link = MetaLink(ReflectivityExample.ReflectivityExample(), 'tag_exec_', 'before', [])
-        node.value.links.add(link)
 
-        transformation = node.wrapper.flat_wrap()
-        self.assertEquals(len(transformation), 4)
-        self.assertEquals(transformation[1].value.func.value.id, 'self')
-        self.assertEquals(transformation[3].value.func.value.id, transformation[1].targets[0].id)
+def test_wrap_call_in_assign():
+    node = ReflectivityExample.method_with_args_sample_node().body[0].body[0]
 
-    def test_call_flattening(self):
-        node = ReflectivityExample.call_with_complex_receiver_sample_node()
-        link = MetaLink(ReflectivityExample.ReflectivityExample(), 'tag_exec_', 'before', [])
-        node.value.func.value.links.add(link)
+    link = MetaLink(ReflectivityExample.ReflectivityExample(), 'tag_exec_', 'before', [])
+    node.value.links.add(link)
 
-        transformation = node.wrapper.flat_wrap()
-        self.assertEquals(len(transformation), 5)
-        self.assertEquals(transformation[1].value.id, 'self')
-        self.assertEquals(transformation[3].value.func.value.id, transformation[1].targets[0].id)
-        self.assertEquals(transformation[4].value.func.value.id, transformation[3].targets[0].id)
+    assert type(node) is ast.Assign
+    assert type(node.value) is ast.Call
 
-    def test_wrap_assign(self):
-        node = ReflectivityExample.sample_node()
+    transformation = node.wrapper.flat_wrap()
+    assert len(transformation) == 5
+    assert type(transformation[0]) == ast.Assign
+    assert transformation[0].value is node.value.args[0]
+    assert type(transformation[1]) is ast.Assign
+    assert transformation[1].value.id == 'self'
+    assert transformation[0] is not node
+    assert len(transformation[3].value.args) == 1
+    assert type(transformation[3].value.args[0]) is ast.Name
+    assert transformation[3].value.args[0].id is node.value.args[0].temp_name
+    assert transformation[3].value.func.value.id is node.value.func.value.temp_name
 
-        self.assertEquals(node.__class__, ast.Assign)
-        transformation = node.wrapper.flat_wrap()
-        self.assertEquals(len(transformation), 1)
-        self.assertIs(transformation[0], node)
 
-        link = MetaLink(ReflectivityExample.ReflectivityExample(), 'tag_exec_', 'before', [])
-        node.links.add(link)
+def test_wrap_complex_expr_call():
+    node = ReflectivityExample.complex_expr_call_sample_node()
 
-        self.assertEquals(node.__class__, ast.Assign)
-        transformation = node.wrapper.flat_wrap()
-        self.assertEquals(len(transformation), 3)
-        self.assertEquals(transformation[0].__class__, ast.Assign)
-        self.assertIs(transformation[0].value, node.value)
-        self.assertIsNot(transformation[0], node)
+    link = MetaLink(ReflectivityExample.ReflectivityExample(), 'tag_exec_', 'before', [])
+    node.value.args[0].links.add(link)
 
-    def test_flatten_children(self):
-        pass
+    transformation = node.wrapper.flat_wrap()
+    assert len(transformation) == 6
+    assert type(transformation[3]) is ast.Assign
+    assert transformation[3].value.rf_id is node.value.args[0].rf_id
+    assert transformation[3] is not node
+
+
+def test_call_receiver_flattening():
+    node = ReflectivityExample.call_with_complex_receiver_sample_node()
+    link = MetaLink(ReflectivityExample.ReflectivityExample(), 'tag_exec_', 'before', [])
+    node.value.links.add(link)
+
+    transformation = node.wrapper.flat_wrap()
+    assert len(transformation) == 4
+    assert transformation[1].value.func.value.id == 'self'
+    assert transformation[3].value.func.value.id == transformation[1].targets[0].id
+
+
+def test_call_flattening():
+    node = ReflectivityExample.call_with_complex_receiver_sample_node()
+    link = MetaLink(ReflectivityExample.ReflectivityExample(), 'tag_exec_', 'before', [])
+    node.value.func.value.links.add(link)
+
+    transformation = node.wrapper.flat_wrap()
+    assert len(transformation) == 5
+    assert transformation[1].value.id == 'self'
+    assert transformation[3].value.func.value.id == transformation[1].targets[0].id
+    assert transformation[4].value.func.value.id == transformation[3].targets[0].id
+
+
+def test_wrap_assign():
+    node = ReflectivityExample.sample_node()
+
+    assert type(node) is ast.Assign
+
+    transformation = node.wrapper.flat_wrap()
+    assert len(transformation) == 1
+    assert transformation[0] is node
+
+    link = MetaLink(ReflectivityExample.ReflectivityExample(), 'tag_exec_', 'before', [])
+    node.links.add(link)
+
+    assert type(node) is ast.Assign
+
+    transformation = node.wrapper.flat_wrap()
+    assert len(transformation) == 3
+    assert type(transformation[0]) is ast.Assign
+    assert transformation[0].value is node.value
+    assert transformation[0] is not node
+
+
+def test_flatten_children():
+    pass

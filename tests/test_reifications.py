@@ -13,7 +13,7 @@ from core.MetaLink import MetaLink
 
 
 @pytest.fixture(autouse=True)
-def setup_method():
+def setup():
     Reflectivity.uninstall_all()
 
 
