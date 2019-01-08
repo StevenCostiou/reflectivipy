@@ -5,11 +5,11 @@ import copy
 # The base node is a MethodNode (for every function or method).
 
 
-class RFAstBuilder:
+class RFAstBuilder(object):
     def __init__(self):
         self.method_node = None
         self.current_index = 1
-        self.flattened_nodes = dict()
+        self.flattened_nodes = {}
 
     def ast_load_list(self, args_list):
         return ast.List(elts=args_list, ctx=ast.Load())
@@ -77,7 +77,7 @@ class RFAstBuilder:
         return self.decorate_node(node)
 
     def decorate_node(self, node):
-        if not node == self.method_node:
+        if node != self.method_node:
             node.is_method = False
 
         node.is_generated = False
@@ -86,8 +86,9 @@ class RFAstBuilder:
         self.flattened_nodes[node.rf_id] = node
         self.current_index += 1
 
+        node_class = node.__class__
         node.can_be_wrapped = True
-        node.temp_name = 'temp_' + node.__class__.__name__ + '_' + str(node.rf_id)
+        node.temp_name = 'temp_{}_{}'.format(node_class.__name__, node.rf_id)
 
         node.method_node = self.method_node
 
@@ -95,10 +96,10 @@ class RFAstBuilder:
         node.links = set()
 
         from wrappers import flat_wrappers
-        if node.__class__ in flat_wrappers:
-            node.wrapper = flat_wrappers[node.__class__](node)
+        if node_class in flat_wrappers:
+            node.wrapper = flat_wrappers[node_class](node)
         else:
             node.wrapper = flat_wrappers['generic'](node)
 
-        node.children = list()
+        node.children = []
         return node

@@ -1,6 +1,6 @@
 import copy
-from RFFlatWrapper import RFFlatWrapper
-from RFCFlowConditionExtractor import RFCFlowConditionExtractor
+from .RFFlatWrapper import RFFlatWrapper
+from .RFCFlowConditionExtractor import RFCFlowConditionExtractor
 
 
 class RFCFlowFlatWrapper(RFFlatWrapper, object):

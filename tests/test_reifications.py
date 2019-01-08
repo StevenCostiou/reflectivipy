@@ -9,7 +9,7 @@ from ReflectivityExample import value_call_call_reification_sample_node
 from ReflectivityExample import value_name_reification_sample_node
 from ReflectivityExample import method_with_args_sample_node
 
-from core.MetaLink import MetaLink
+from core import MetaLink
 
 
 @pytest.fixture(autouse=True)
@@ -409,7 +409,7 @@ def test_option_args_as_array_reification_call():
     call_node = method_with_args_sample_node().body[0].body[0].value
 
     link = MetaLink(example, 'tag_exec', 'before', ['arguments', 'link', 'class'])
-    link.set_args_as_array(True)
+    link.option_arg_as_array = True
     Reflectivity.link(link, call_node)
 
     assert example.tag is None

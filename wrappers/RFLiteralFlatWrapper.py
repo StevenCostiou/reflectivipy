@@ -1,4 +1,4 @@
-from RFFlatWrapper import RFFlatWrapper
+from .RFFlatWrapper import RFFlatWrapper
 
 
 class RFLiteralFlatWrapper(RFFlatWrapper):

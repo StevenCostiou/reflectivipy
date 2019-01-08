@@ -3,7 +3,7 @@ import pytest
 import Reflectivity
 import tests.ReflectivityExample as ReflectivityExample
 from core.MetaLink import MetaLink
-from wrappers.RFFlatWrapper import RFFlatWrapper
+from wrappers import RFFlatWrapper
 
 
 @pytest.fixture(autouse=True)

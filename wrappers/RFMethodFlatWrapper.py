@@ -1,5 +1,5 @@
 import ast
-from RFCFlowFlatWrapper import RFCFlowFlatWrapper
+from .RFCFlowFlatWrapper import RFCFlowFlatWrapper
 
 
 class RFMethodFlatWrapper(RFCFlowFlatWrapper):

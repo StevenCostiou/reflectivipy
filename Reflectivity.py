@@ -1,9 +1,10 @@
 import ast
+from weakref import WeakValueDictionary
 from core.ReflectiveMethod import ReflectiveMethod
 
 from wrappers import flat_wrappers
 
-rf_methods = dict()
+rf_methods = WeakValueDictionary()
 
 metalinks = set()
 nodes_with_links = set()
@@ -16,13 +17,13 @@ def rf_ast_for_method(class_or_object, method_name):
 
 def reflective_method_for(class_or_object, method_name):
     rf_key = (class_or_object, method_name)
-
-    if not (rf_key in rf_methods.keys()):
+    try:
+        return rf_methods[rf_key]
+    except KeyError:
         method = getattr(class_or_object, method_name)
         rf_method = ReflectiveMethod(class_or_object, method, method_name)
         rf_methods[rf_key] = rf_method
         return rf_method
-    return rf_methods.get(rf_key)
 
 
 def link(metalink, rf_node):

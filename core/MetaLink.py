@@ -1,10 +1,10 @@
-class MetaLink:
-    def __init__(self, metaobject, selector, control, args):
+class MetaLink(object):
+    def __init__(self, metaobject, selector, control, arguments=None):
         self.metaobject = metaobject
         self.selector = selector
         self.control = control
         self.nodes = []
-        self.arguments = args
+        self.arguments = arguments or []
         self.reified_arguments = []
         self.option_arg_as_array = False
 
@@ -15,8 +15,10 @@ class MetaLink:
         self.nodes.remove(rf_node)
         rf_node.links.remove(self)
 
+    def uninstall(self, from_node=None):
+        nodes = [from_node] if from_node else list(self.nodes)
+        for node in nodes:
+            self.remove_node(node)
+
     def reset_reified_arguments(self):
         self.reified_arguments = []
-
-    def set_args_as_array(self, a_bool):
-        self.option_arg_as_array = a_bool

@@ -10,7 +10,6 @@ from .RFExprFlatWrapper import RFExprFlatWrapper
 from .RFCallFlatWrapper import RFCallFlatWrapper
 
 
-
 flat_wrappers = {
     ast.Assign: RFAssignFlatWrapper,
     ast.Return: RFReturnFlatWrapper,
@@ -26,3 +25,8 @@ flat_wrappers = {
     ast.Call: RFCallFlatWrapper,
     'generic': RFFlatWrapper
 }
+
+
+__all__ = ['RFAssignFlatWrapper', 'RFReturnFlatWrapper', 'RFMethodFlatWrapper',
+           'RFCFlowFlatWrapper', 'RFCompareFlatWrapper', 'RFLiteralFlatWrapper',
+           'RFExprFlatWrapper', 'RFCallFlatWrapper', 'RFFlatWrapper']

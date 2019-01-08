@@ -2,7 +2,7 @@ import pytest
 
 import Reflectivity
 from tests.ReflectivityExample import ReflectivityExample
-from core.MetaLink import MetaLink
+from core import MetaLink
 
 
 def test_link_to_node():

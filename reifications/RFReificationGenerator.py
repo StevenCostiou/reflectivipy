@@ -1,10 +1,10 @@
 import core.RFAstBuilder
-import RFReification
+from . import RFReification
 
 
 class RFReificationGenerator(object):
     def __init__(self):
-        self.builder = core.RFAstBuilder.RFAstBuilder()
+        self.builder = core.RFAstBuilder()
         self.reification_counter = 0
         self.arg_list = []
 
@@ -36,5 +36,5 @@ class RFReificationGenerator(object):
         if isinstance(arg, basestring):
             return arg + '_' + rf_id
 
-        self.reification_counter = self.reification_counter + 1
-        return 'value_' + rf_id + '_' + str(self.reification_counter)
+        self.reification_counter += 1
+        return 'value_{}_{}'.format(rf_id, self.reification_counter)
