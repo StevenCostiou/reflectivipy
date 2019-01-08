@@ -1,5 +1,6 @@
 import copy
 import ast
+import inspect
 from core.RFAstBuilder import RFAstBuilder
 
 
@@ -25,7 +26,11 @@ class ReflectiveMethod(object):
         locs = {}
         compiled_method = compile(rf_ast, "<ast>", 'exec')
         eval(compiled_method, {}, locs)
-        setattr(self.target_entity, method_name, locs[method_name])
+        if not inspect.isclass(self.target_entity):
+            method = locs[method_name].__get__(self.target_entity)
+        else:
+            method = locs[method_name]
+        setattr(self.target_entity, method_name, method)
 
     def recompile(self):
         self.compile_rf_method(self.reflective_ast, self.method_name)
