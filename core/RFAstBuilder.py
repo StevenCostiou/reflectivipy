@@ -32,15 +32,17 @@ class RFAstBuilder(object):
     def ast_expr(self, node):
         return ast.Expr(node)
 
-    def get_method_source(self, method):
+    @staticmethod
+    def get_method_source(method):
         lines = inspect.getsourcelines(method)
         src = ''
         for line in lines[0]:
             src += line[4:]
         return src
 
-    def ast_for_method(self, method):
-        return ast.parse(self.get_method_source(method))
+    @classmethod
+    def ast_for_method(cls, method):
+        return ast.parse(cls.get_method_source(method))
 
     def rf_ast_for_method(self, method_class, method, method_name):
         method_node = self.ast_for_method(method)

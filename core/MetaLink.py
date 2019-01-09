@@ -1,5 +1,5 @@
 class MetaLink(object):
-    def __init__(self, metaobject, selector, control, arguments=None):
+    def __init__(self, metaobject, selector, control='before', arguments=None):
         self.metaobject = metaobject
         self.selector = selector
         self.control = control
