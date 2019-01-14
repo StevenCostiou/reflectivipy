@@ -25,7 +25,8 @@ class ReflectiveMethod(object):
     def compile_rf_method(self, rf_ast, method_name):
         locs = {}
         compiled_method = compile(rf_ast, "<ast>", 'exec')
-        eval(compiled_method, {'__rf_original_method__': self.original_method}, locs)
+        global_vars = {'__rf_original_method__': self.original_method}
+        eval(compiled_method, global_vars, locs)
         if not inspect.isclass(self.target_entity):
             method = locs[method_name].__get__(self.target_entity)
         else:
