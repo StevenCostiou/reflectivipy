@@ -4,7 +4,7 @@ import inspect
 
 
 class MetaLink(object):
-    def __init__(self, metaobject, selector, control='before', arguments=None):
+    def __init__(self, metaobject, selector, control="before", arguments=None):
         self.metaobject = metaobject
         self.selector = selector
         self.control = control
@@ -41,9 +41,9 @@ class ReflectiveMethod(object):
 
     def init_reflective_method(self):
         builder = AstBuilder()
-        self.original_ast = builder.rf_ast_for_method(self.target_entity,
-                                                      self.original_method,
-                                                      self.method_name)
+        self.original_ast = builder.rf_ast_for_method(
+            self.target_entity, self.original_method, self.method_name
+        )
         self.reflective_ast = copy.deepcopy(self.original_ast)
         self.original_ast.reflective_method = self
 
@@ -52,8 +52,8 @@ class ReflectiveMethod(object):
 
     def compile_rf_method(self, rf_ast, method_name):
         locs = {}
-        compiled_method = compile(rf_ast, "<ast>", 'exec')
-        global_vars = {'__rf_original_method__': self.original_method}
+        compiled_method = compile(rf_ast, "<ast>", "exec")
+        global_vars = {"__rf_original_method__": self.original_method}
         eval(compiled_method, global_vars, locs)
         if not inspect.isclass(self.target_entity):
             method = locs[method_name].__get__(self.target_entity)
@@ -65,8 +65,7 @@ class ReflectiveMethod(object):
         self.compile_rf_method(self.reflective_ast, self.method_name)
 
     def invalidate(self):
-        self.reflective_ast.body[0].body = self.original_ast \
-                                            .wrapper.flat_wrap()
+        self.reflective_ast.body[0].body = self.original_ast.wrapper.flat_wrap()
         ast.fix_missing_locations(self.reflective_ast)
         self.recompile()
 
@@ -105,10 +104,10 @@ class AstBuilder(object):
 
     @staticmethod
     def get_method_source(method):
-        while '__rf_original_method__' in method.__func__.func_globals:
-            method = method.__func__.func_globals['__rf_original_method__']
+        while "__rf_original_method__" in method.__func__.func_globals:
+            method = method.__func__.func_globals["__rf_original_method__"]
         lines = inspect.getsourcelines(method)
-        src = ''
+        src = ""
         for line in lines[0]:
             src += line[4:]
         return src
@@ -163,7 +162,7 @@ class AstBuilder(object):
 
         node_class = node.__class__
         node.can_be_wrapped = True
-        node.temp_name = 'temp_{}_{}'.format(node_class.__name__, node.rf_id)
+        node.temp_name = "temp_{}_{}".format(node_class.__name__, node.rf_id)
 
         node.method_node = self.method_node
 
@@ -171,10 +170,11 @@ class AstBuilder(object):
         node.links = set()
 
         from wrappers import flat_wrappers
+
         if node_class in flat_wrappers:
             node.wrapper = flat_wrappers[node_class](node)
         else:
-            node.wrapper = flat_wrappers['generic'](node)
+            node.wrapper = flat_wrappers["generic"](node)
 
         node.children = []
         return node

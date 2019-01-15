@@ -14,9 +14,9 @@ class CallFlatWrapper(FlatWrapper):
 
         twin.args = new_args
         twin.func.value = self.builder.ast_load(twin.func.value.temp_name)
-        transformed_node = self.builder.assign_named_value(self.original_node.
-                                                           temp_name,
-                                                           twin)
+        transformed_node = self.builder.assign_named_value(
+            self.original_node.temp_name, twin
+        )
         self.node_transformation.append(transformed_node)
 
     def extract_receiver_node(self):

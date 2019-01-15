@@ -7,7 +7,7 @@ class Reification(object):
         return self.visit_method(rf_node)(rf_node)
 
     def visit_method(self, rf_node):
-        visit_method = 'visit_' + rf_node.__class__.__name__
+        visit_method = "visit_" + rf_node.__class__.__name__
         return getattr(self, visit_method)
 
 
@@ -26,7 +26,7 @@ class ClassReification(Reification):
 
 class ObjectReification(Reification):
     def visit_node(self, rf_node):
-        return ast.Name(id='self', ctx=ast.Load())
+        return ast.Name(id="self", ctx=ast.Load())
 
 
 class NodeReification(Reification):
@@ -91,7 +91,7 @@ class ArgumentReification(Reification):
     def visit_FunctionDef(self, rf_node):
         args = []
         for arg in rf_node.args.args:
-            if not arg.id == 'self':
+            if not arg.id == "self":
                 args.append(ast.Name(id=arg.id, ctx=ast.Load()))
 
         return ast.List(elts=args, ctx=ast.Load())
@@ -105,25 +105,25 @@ class ArgumentReification(Reification):
 
 
 reifications_dict = {
-    'class': ClassReification,
-    'node': NodeReification,
-    'object': ObjectReification,
-    'method': MethodReification,
-    'sender': SenderReification,
-    'receiver': ReceiverReification,
-    'selector': SelectorReification,
-    'name': NameReification,
-    'value': ValueReification,
-    'old_value': OldValueReification,
-    'new_value': NewValueReification,
-    'arguments': ArgumentReification
+    "class": ClassReification,
+    "node": NodeReification,
+    "object": ObjectReification,
+    "method": MethodReification,
+    "sender": SenderReification,
+    "receiver": ReceiverReification,
+    "selector": SelectorReification,
+    "name": NameReification,
+    "value": ValueReification,
+    "old_value": OldValueReification,
+    "new_value": NewValueReification,
+    "arguments": ArgumentReification,
 }
 
 
 def reification_for(key, metalink):
     if key in reifications_dict:
         return reifications_dict[key]()
-    if key == 'link':
+    if key == "link":
         return ConstReification(metalink)
     return ConstReification(key)
 
@@ -143,14 +143,13 @@ class ReificationGenerator(object):
             for arg in link.arguments:
                 reification = reification_for(arg, link).visit_node(rf_node)
                 rf_name = self.rf_name_for_arg(arg, str(rf_node.rf_id))
-                expressions.append(self.builder
-                                   .assign_named_value(rf_name, reification))
-                self.add_reified_argument_to_link(self.builder
-                                                  .ast_load(rf_name), link)
+                expressions.append(
+                    self.builder.assign_named_value(rf_name, reification)
+                )
+                self.add_reified_argument_to_link(self.builder.ast_load(rf_name), link)
 
             if link.option_arg_as_array:
-                link.reified_arguments.append(self.builder
-                                              .ast_load_list(self.arg_list))
+                link.reified_arguments.append(self.builder.ast_load_list(self.arg_list))
                 self.arg_list = []
 
         return expressions
@@ -163,7 +162,7 @@ class ReificationGenerator(object):
 
     def rf_name_for_arg(self, arg, rf_id):
         if isinstance(arg, basestring):
-            return arg + '_' + rf_id
+            return arg + "_" + rf_id
 
         self.reification_counter += 1
-        return 'value_{}_{}'.format(rf_id, self.reification_counter)
+        return "value_{}_{}".format(rf_id, self.reification_counter)

@@ -8,7 +8,7 @@ class CFlowConditionExtractor(object):
         self.body_supplements = []
 
     def visit_node(self, rf_node):
-        visit_method = 'visit_' + rf_node.__class__.__name__
+        visit_method = "visit_" + rf_node.__class__.__name__
         getattr(self, visit_method)(rf_node)
 
     def visit_While(self, rf_node):
@@ -52,7 +52,7 @@ class CFlowFlatWrapper(FlatWrapper):
     def transform_body(self):
         transformations = []
         for node in self.extract_body():
-            if hasattr(node, 'can_be_wrapped'):
+            if hasattr(node, "can_be_wrapped"):
                 body_transformation = node.wrapper.flat_wrap()
                 transformations.extend(body_transformation)
         return transformations

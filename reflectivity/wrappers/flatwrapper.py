@@ -45,19 +45,18 @@ class FlatWrapper(object):
         arguments.extend(link.reified_arguments)
 
         metaobject_node = ast.Const(metaobject)
-        attr_node = ast.Attribute(value=metaobject_node, attr=selector,
-                                  ctx=ast.Load())
+        attr_node = ast.Attribute(value=metaobject_node, attr=selector, ctx=ast.Load())
         call_node = ast.Call(func=attr_node, args=arguments, keywords=[])
 
         return ast.Expr(call_node)
 
     def sort_links(self):
         for link in self.original_node.links:
-            if link.control == 'before':
+            if link.control == "before":
                 self.before_links.append(link)
-            if link.control == 'after':
+            if link.control == "after":
                 self.after_links.append(link)
-            if link.control == 'instead':
+            if link.control == "instead":
                 self.instead_links.append(link)
 
     def flat_wrap(self):
@@ -85,8 +84,7 @@ class FlatWrapper(object):
         return self.body
 
     def should_wrap(self, rf_node):
-        return self.should_wrap_node(rf_node) or \
-                    self.should_wrap_children(rf_node)
+        return self.should_wrap_node(rf_node) or self.should_wrap_children(rf_node)
 
     def should_wrap_node(self, rf_node):
         if rf_node.links:
@@ -105,7 +103,7 @@ class FlatWrapper(object):
 
     def append_flattened_children(self):
         for node in self.flattened_children:
-            if hasattr(node, 'wrapper'):
+            if hasattr(node, "wrapper"):
                 self.body.extend(node.wrapper.flat_wrap())
             else:
                 self.body.append(node)

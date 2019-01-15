@@ -23,10 +23,18 @@ flat_wrappers = {
     ast.Name: LiteralFlatWrapper,
     ast.Expr: ExprFlatWrapper,
     ast.Call: CallFlatWrapper,
-    'generic': FlatWrapper
+    "generic": FlatWrapper,
 }
 
 
-__all__ = ['AssignFlatWrapper', 'ReturnFlatWrapper', 'MethodFlatWrapper',
-           'CFlowFlatWrapper', 'CompareFlatWrapper', 'LiteralFlatWrapper',
-           'ExprFlatWrapper', 'CallFlatWrapper', 'FlatWrapper']
+__all__ = [
+    "AssignFlatWrapper",
+    "ReturnFlatWrapper",
+    "MethodFlatWrapper",
+    "CFlowFlatWrapper",
+    "CompareFlatWrapper",
+    "LiteralFlatWrapper",
+    "ExprFlatWrapper",
+    "CallFlatWrapper",
+    "FlatWrapper",
+]
