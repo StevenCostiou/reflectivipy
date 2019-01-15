@@ -1,7 +1,7 @@
 import ast
 
 
-class RFReification(object):
+class Reification(object):
     def visit_node(self, rf_node):
         return self.visit_method(rf_node)(rf_node)
 
@@ -10,7 +10,7 @@ class RFReification(object):
         return getattr(self, visit_method)
 
 
-class RFConstReification(RFReification):
+class ConstReification(Reification):
     def __init__(self, value):
         self.value = value
 
@@ -18,45 +18,45 @@ class RFConstReification(RFReification):
         return ast.Const(self.value)
 
 
-class RFClassReification(RFReification):
+class ClassReification(Reification):
     def visit_node(self, rf_node):
-        return RFConstReification(rf_node.method_class).visit_node(rf_node)
+        return ConstReification(rf_node.method_class).visit_node(rf_node)
 
 
-class RFObjectReification(RFReification):
+class ObjectReification(Reification):
     def visit_node(self, rf_node):
         return ast.Name(id='self', ctx=ast.Load())
 
 
-class RFNodeReification(RFReification):
+class NodeReification(Reification):
     def visit_node(self, rf_node):
-        return RFConstReification(rf_node).visit_node(rf_node)
+        return ConstReification(rf_node).visit_node(rf_node)
 
 
-class RFMethodReification(RFReification):
+class MethodReification(Reification):
     def visit_node(self, rf_node):
         method = rf_node.method_node.reflective_method.target_entity
         method_name = rf_node.method_node.method_name
-        return RFConstReification(getattr(method, method_name)).visit_node(rf_node)
+        return ConstReification(getattr(method, method_name)).visit_node(rf_node)
 
 
-class RFSenderReification(RFReification):
+class SenderReification(Reification):
     def visit_node(self, rf_node):
         method_name = rf_node.method_node.method_name
-        return RFConstReification(method_name).visit_node(rf_node)
+        return ConstReification(method_name).visit_node(rf_node)
 
 
-class RFReceiverReification(RFReification):
+class ReceiverReification(Reification):
     def visit_node(self, rf_node):
         return ast.Name(id=rf_node.func.value.temp_name, ctx=ast.Load())
 
 
-class RFSelectorReification(RFReification):
+class SelectorReification(Reification):
     def visit_node(self, rf_node):
         return ast.Str(rf_node.func.attr)
 
 
-class RFValueReification(RFReification):
+class ValueReification(Reification):
     def visit_Assign(self, assign_node):
         return ast.Name(id=assign_node.targets[0].id, ctx=ast.Load())
 
@@ -64,17 +64,17 @@ class RFValueReification(RFReification):
         return name
 
 
-class RFOldValueReification(RFValueReification):
+class OldValueReification(ValueReification):
     def visit_Assign(self, assign_node):
         return ast.Name(id=assign_node.targets[0].id, ctx=ast.Load())
 
 
-class RFNewValueReification(RFValueReification):
+class NewValueReification(ValueReification):
     def visit_Assign(self, assign_node):
         return ast.Name(id=assign_node.temp_name, ctx=ast.Load())
 
 
-class RFNameReification(RFReification):
+class NameReification(Reification):
     def visit_Assign(self, assign_node):
         return self.visit_Name(assign_node.targets[0])
 
@@ -82,7 +82,7 @@ class RFNameReification(RFReification):
         return ast.Str(name_node.id)
 
 
-class RFArgumentReification(RFReification):
+class ArgumentReification(Reification):
     def visit_Module(self, rf_node):
         return self.visit_FunctionDef(rf_node.body[0])
 
@@ -100,27 +100,3 @@ class RFArgumentReification(RFReification):
             args.append(ast.Name(id=arg.id, ctx=ast.Load()))
 
         return ast.List(elts=args, ctx=ast.Load())
-
-
-reifications = {
-    'class': RFClassReification,
-    'node': RFNodeReification,
-    'object': RFObjectReification,
-    'method': RFMethodReification,
-    'sender': RFSenderReification,
-    'receiver': RFReceiverReification,
-    'selector': RFSelectorReification,
-    'name': RFNameReification,
-    'value': RFValueReification,
-    'old_value': RFOldValueReification,
-    'new_value': RFNewValueReification,
-    'arguments': RFArgumentReification
-}
-
-
-def reification_for(key, metalink):
-    if key in reifications:
-        return reifications[key]()
-    if key == 'link':
-        return RFConstReification(metalink)
-    return RFConstReification(key)

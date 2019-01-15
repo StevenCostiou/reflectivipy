@@ -1,5 +1,5 @@
 import core.RFAstBuilder
-from . import RFReification
+from . import reification_for
 
 
 class RFReificationGenerator(object):
@@ -15,7 +15,7 @@ class RFReificationGenerator(object):
             link.reset_reified_arguments()
 
             for arg in link.arguments:
-                reification = RFReification.reification_for(arg, link).visit_node(rf_node)
+                reification = reification_for(arg, link).visit_node(rf_node)
                 rf_name = self.rf_name_for_arg(arg, str(rf_node.rf_id))
                 expressions.append(self.builder.assign_named_value(rf_name, reification))
                 self.add_reified_argument_to_link(self.builder.ast_load(rf_name), link)
