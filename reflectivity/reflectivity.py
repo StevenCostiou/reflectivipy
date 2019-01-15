@@ -1,13 +1,13 @@
 import ast
-from weakref import WeakValueDictionary
+from weakref import WeakValueDictionary, WeakSet
 from core.ReflectiveMethod import ReflectiveMethod
 
 from wrappers import flat_wrappers
 
 rf_methods = WeakValueDictionary()
 
-metalinks = set()
-nodes_with_links = set()
+metalinks = WeakSet()
+nodes_with_links = WeakSet()
 
 
 # Finds the rf_ast for the given method name, or generates it if it does not exist

@@ -1,6 +1,6 @@
 import ast
 from core.RFAstBuilder import RFAstBuilder
-from reifications.RFReificationGenerator import RFReificationGenerator
+from reflectivity.reifications.RFReificationGenerator import RFReificationGenerator
 
 
 class RFFlatWrapper(object):

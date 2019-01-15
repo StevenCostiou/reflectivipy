@@ -1,6 +1,6 @@
 import pytest
 
-import Reflectivity
+import reflectivity
 import tests.ReflectivityExample as ReflectivityExample
 from core.MetaLink import MetaLink
 from wrappers import RFFlatWrapper
@@ -8,7 +8,7 @@ from wrappers import RFFlatWrapper
 
 @pytest.fixture(autouse=True)
 def setup():
-    Reflectivity.uninstall_all()
+    reflectivity.uninstall_all()
 
 
 def test_sort_links():

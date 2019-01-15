@@ -1,6 +1,6 @@
 import pytest
 
-import Reflectivity
+import reflectivity
 from tests.ReflectivityExample import ReflectivityExample
 from core import MetaLink
 
@@ -9,9 +9,9 @@ def test_wrap_method_node():
     example = ReflectivityExample()
 
     link = MetaLink(example, 'tag_exec_', 'before', [])
-    ast = Reflectivity.rf_ast_for_method(ReflectivityExample, 'example_method')
+    ast = reflectivity.rf_ast_for_method(ReflectivityExample, 'example_method')
 
-    Reflectivity.link(link, ast)
+    reflectivity.link(link, ast)
 
     assert example.tag is None
     assert ReflectivityExample().example_method() == 9

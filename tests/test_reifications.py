@@ -1,6 +1,6 @@
 import pytest
 
-import Reflectivity
+import reflectivity
 from ReflectivityExample import ReflectivityExample
 from ReflectivityExample import call_with_complex_receiver_sample_node
 from ReflectivityExample import value_reification_sample_node
@@ -14,16 +14,16 @@ from core import MetaLink
 
 @pytest.fixture(autouse=True)
 def setup():
-    Reflectivity.uninstall_all()
+    reflectivity.uninstall_all()
 
 
 def test_class_reification():
     example = ReflectivityExample()
     link = MetaLink(example, 'tag_exec', 'before', ['class'])
-    rf_ast = Reflectivity.reflective_method_for(ReflectivityExample, 'example_assign_call')
+    rf_ast = reflectivity.reflective_method_for(ReflectivityExample, 'example_assign_call')
     node = rf_ast.original_ast.body[0].body[1]
 
-    Reflectivity.link(link, node)
+    reflectivity.link(link, node)
 
     assert example.tag is None
 
@@ -35,10 +35,10 @@ def test_const_reification():
     example = ReflectivityExample()
     an_object = ReflectivityExample()
     link = MetaLink(example, 'tag_exec', 'before', [an_object])
-    rf_ast = Reflectivity.reflective_method_for(ReflectivityExample, 'example_assign_call')
+    rf_ast = reflectivity.reflective_method_for(ReflectivityExample, 'example_assign_call')
     node = rf_ast.original_ast.body[0].body[1]
 
-    Reflectivity.link(link, node)
+    reflectivity.link(link, node)
 
     assert example.tag is None
     assert ReflectivityExample().example_assign_call() == 2
@@ -49,10 +49,10 @@ def test_object_reification():
     example = ReflectivityExample()
     working_example = ReflectivityExample()
     link = MetaLink(example, 'tag_exec', 'before', ['object'])
-    rf_ast = Reflectivity.reflective_method_for(ReflectivityExample, 'example_assign_call')
+    rf_ast = reflectivity.reflective_method_for(ReflectivityExample, 'example_assign_call')
     node = rf_ast.original_ast.body[0].body[1]
 
-    Reflectivity.link(link, node)
+    reflectivity.link(link, node)
 
     assert example.tag is None
     assert working_example.example_assign_call() == 2
@@ -62,10 +62,10 @@ def test_object_reification():
 def test_node_reification():
     example = ReflectivityExample()
     link = MetaLink(example, 'tag_exec', 'before', ['node'])
-    rf_ast = Reflectivity.reflective_method_for(ReflectivityExample, 'example_assign_call')
+    rf_ast = reflectivity.reflective_method_for(ReflectivityExample, 'example_assign_call')
     node = rf_ast.original_ast.body[0].body[1]
 
-    Reflectivity.link(link, node)
+    reflectivity.link(link, node)
 
     assert example.tag is None
     assert ReflectivityExample().example_assign_call() == 2
@@ -76,10 +76,10 @@ def test_method_reification():
     example = ReflectivityExample()
     working_example = ReflectivityExample()
     link = MetaLink(example, 'tag_exec', 'before', ['method'])
-    rf_ast = Reflectivity.reflective_method_for(ReflectivityExample, 'example_assign_call')
+    rf_ast = reflectivity.reflective_method_for(ReflectivityExample, 'example_assign_call')
     node = rf_ast.original_ast.body[0].body[1]
 
-    Reflectivity.link(link, node)
+    reflectivity.link(link, node)
 
     assert example.tag is None
     assert working_example.example_assign_call() == 2
@@ -91,10 +91,10 @@ def test_multiple_reifications():
     an_object = ReflectivityExample()
     working_example = ReflectivityExample()
     link = MetaLink(example, 'tag_reifications', 'after', ['class', 'object', 'node', an_object])
-    rf_ast = Reflectivity.reflective_method_for(ReflectivityExample, 'example_assign_call')
+    rf_ast = reflectivity.reflective_method_for(ReflectivityExample, 'example_assign_call')
     node = rf_ast.original_ast.body[0].body[1]
 
-    Reflectivity.link(link, node)
+    reflectivity.link(link, node)
 
     assert len(example.tagged_reifications) == 0
     assert working_example.example_assign_call() == 2
@@ -112,7 +112,7 @@ def test_receiver_reification():
     working_example = ReflectivityExample()
     link = MetaLink(example, 'tag_exec', 'before', ['receiver'])
 
-    Reflectivity.link(link, node)
+    reflectivity.link(link, node)
     assert example.tag is None
 
     working_example.m5()
@@ -126,7 +126,7 @@ def test_call_receiver_reification():
     working_example = ReflectivityExample()
     link = MetaLink(example, 'tag_exec', 'before', ['receiver'])
 
-    Reflectivity.link(link, node)
+    reflectivity.link(link, node)
     assert example.tag is None
 
     working_example.m5()
@@ -140,7 +140,7 @@ def test_selector_reification():
     working_example = ReflectivityExample()
     link = MetaLink(example, 'tag_exec', 'before', ['selector'])
 
-    Reflectivity.link(link, node)
+    reflectivity.link(link, node)
     assert example.tag is None
 
     working_example.m5()
@@ -154,7 +154,7 @@ def test_sender_reification():
     working_example = ReflectivityExample()
     link = MetaLink(example, 'tag_exec', 'before', ['sender'])
 
-    Reflectivity.link(link, node)
+    reflectivity.link(link, node)
     assert example.tag is None
 
     working_example.m5()
@@ -168,7 +168,7 @@ def test_assignment_values_reification():
     working_example = ReflectivityExample()
     link = MetaLink(example, 'tag_exec', 'before', ['receiver'])
 
-    Reflectivity.link(link, node)
+    reflectivity.link(link, node)
     assert example.tag is None
 
     working_example.m5()
@@ -182,7 +182,7 @@ def test_read_values_reification():
     working_example = ReflectivityExample()
     link = MetaLink(example, 'tag_exec', 'before', ['receiver'])
 
-    Reflectivity.link(link, node)
+    reflectivity.link(link, node)
     assert example.tag is None
 
     working_example.m5()
@@ -196,7 +196,7 @@ def test_assignment_name_reification():
     working_example = ReflectivityExample()
     link = MetaLink(example, 'tag_exec', 'before', ['name'])
 
-    Reflectivity.link(link, node)
+    reflectivity.link(link, node)
     assert example.tag is None
 
     working_example.example_value_reification()
@@ -210,7 +210,7 @@ def test_read_name_reification():
     working_example = ReflectivityExample()
     link = MetaLink(example, 'tag_exec', 'before', ['name'])
 
-    Reflectivity.link(link, node)
+    reflectivity.link(link, node)
     assert example.tag is None
 
     working_example.example_value_reification()
@@ -224,7 +224,7 @@ def test_arguments_reification():
     working_example = ReflectivityExample()
     link = MetaLink(example, 'tag_exec', 'before', ['receiver'])
 
-    Reflectivity.link(link, node)
+    reflectivity.link(link, node)
     assert example.tag is None
 
     working_example.m5()
@@ -238,7 +238,7 @@ def test_old_value_reification_assign():
     working_example = ReflectivityExample()
     link = MetaLink(example, 'tag_exec', 'before', ['old_value'])
 
-    Reflectivity.link(link, node)
+    reflectivity.link(link, node)
     assert example.tag is None
 
     working_example.example_value_reification()
@@ -252,7 +252,7 @@ def test_new_value_reification_assign():
     working_example = ReflectivityExample()
     link = MetaLink(example, 'tag_exec', 'before', ['new_value'])
 
-    Reflectivity.link(link, node)
+    reflectivity.link(link, node)
     assert example.tag is None
 
     working_example.example_value_reification()
@@ -266,7 +266,7 @@ def test_value_reification_assign():
     working_example = ReflectivityExample()
     link = MetaLink(example, 'tag_exec', 'before', ['value'])
 
-    Reflectivity.link(link, node)
+    reflectivity.link(link, node)
     assert example.tag is None
 
     working_example.example_value_reification()
@@ -282,9 +282,9 @@ def test_value_reification_name():
     link_2 = MetaLink(example, 'tag_push', 'before', ['old_value'])
     link_3 = MetaLink(example, 'tag_push', 'before', ['new_value'])
 
-    Reflectivity.link(link_1, node)
-    Reflectivity.link(link_2, node)
-    Reflectivity.link(link_3, node)
+    reflectivity.link(link_1, node)
+    reflectivity.link(link_2, node)
+    reflectivity.link(link_3, node)
 
     assert example.tag is None
 
@@ -302,7 +302,7 @@ def test_old_value_with_call_reification():
     working_example = ReflectivityExample()
     link = MetaLink(example, 'tag_exec', 'before', ['old_value'])
 
-    Reflectivity.link(link, node)
+    reflectivity.link(link, node)
     assert example.tag is None
 
     working_example.example_value_call_reification()
@@ -316,7 +316,7 @@ def test_new_value_with_call_reification():
     working_example = ReflectivityExample()
     link = MetaLink(example, 'tag_exec', 'before', ['new_value'])
 
-    Reflectivity.link(link, node)
+    reflectivity.link(link, node)
     assert example.tag is None
 
     working_example.example_value_call_reification()
@@ -330,7 +330,7 @@ def test_value_with_call_reification():
     working_example = ReflectivityExample()
     link = MetaLink(example, 'tag_exec', 'before', ['value'])
 
-    Reflectivity.link(link, node)
+    reflectivity.link(link, node)
     assert example.tag is None
 
     working_example.example_value_call_reification()
@@ -347,9 +347,9 @@ def test_value_with_call_call_reification():
     link_2 = MetaLink(example, 'tag_push', 'before', ['old_value'])
     link_3 = MetaLink(example, 'tag_push', 'before', ['new_value'])
 
-    Reflectivity.link(link_1, node)
-    Reflectivity.link(link_2, node)
-    Reflectivity.link(link_3, node)
+    reflectivity.link(link_1, node)
+    reflectivity.link(link_2, node)
+    reflectivity.link(link_3, node)
 
     assert example.tag is None
 
@@ -369,7 +369,7 @@ def test_argument_as_array_reification_method():
     method_node = method_with_args_sample_node()
 
     link = MetaLink(example, 'tag_exec', 'before', ['arguments'])
-    Reflectivity.link(link, method_node)
+    reflectivity.link(link, method_node)
 
     assert example.tag is None
 
@@ -392,7 +392,7 @@ def test_argument_as_array_reification_call():
     call_node = method_with_args_sample_node().body[0].body[0].value
 
     link = MetaLink(example, 'tag_exec', 'before', ['arguments'])
-    Reflectivity.link(link, call_node)
+    reflectivity.link(link, call_node)
 
     assert example.tag is None
 
@@ -410,7 +410,7 @@ def test_option_args_as_array_reification_call():
 
     link = MetaLink(example, 'tag_exec', 'before', ['arguments', 'link', 'class'])
     link.option_arg_as_array = True
-    Reflectivity.link(link, call_node)
+    reflectivity.link(link, call_node)
 
     assert example.tag is None
 

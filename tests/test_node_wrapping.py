@@ -1,13 +1,13 @@
 import pytest
 import ast
 import ReflectivityExample
-import Reflectivity
+import reflectivity
 from core import MetaLink
 
 
 @pytest.fixture(autouse=True)
 def setup():
-    Reflectivity.uninstall_all()
+    reflectivity.uninstall_all()
 
 
 def test_wrap_expr():
