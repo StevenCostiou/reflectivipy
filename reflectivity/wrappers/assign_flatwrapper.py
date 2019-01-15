@@ -1,8 +1,8 @@
 import ast
-from .RFFlatWrapper import RFFlatWrapper
+from .flatwrapper import FlatWrapper
 
 
-class RFAssignFlatWrapper(RFFlatWrapper):
+class AssignFlatWrapper(FlatWrapper):
     def flatten_children(self):
         value_node = self.original_node.value
 

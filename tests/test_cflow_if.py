@@ -1,8 +1,8 @@
 import pytest
 
 import reflectivity
+from reflectivity import MetaLink
 from tests.ReflectivityExample import ReflectivityExample
-from core import MetaLink
 
 
 @pytest.fixture(autouse=True)

@@ -1,8 +1,8 @@
 import copy
-from .RFFlatWrapper import RFFlatWrapper
+from .flatwrapper import FlatWrapper
 
 
-class RFCompareFlatWrapper(RFFlatWrapper):
+class CompareFlatWrapper(FlatWrapper):
     def transform_node(self):
         # TODO : node transformation here
         self.original_node.twin.left = self.builder.ast_load(self.original_node.left.temp_name)

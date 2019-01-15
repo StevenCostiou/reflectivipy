@@ -1,13 +1,13 @@
 import ast
-from .RFCFlowFlatWrapper import RFCFlowFlatWrapper
+from .cflow_flatwrapper import CFlowFlatWrapper
 
 
-class RFMethodFlatWrapper(RFCFlowFlatWrapper):
+class MethodFlatWrapper(CFlowFlatWrapper):
     def transform_node(self):
         self.node_transformation.extend(self.transform_body())
 
     def sort_links(self):
-        super(RFMethodFlatWrapper, self).sort_links()
+        super(MethodFlatWrapper, self).sort_links()
 
         body = self.extract_body()
         if not body:

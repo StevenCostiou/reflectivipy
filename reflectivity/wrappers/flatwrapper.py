@@ -1,9 +1,9 @@
 import ast
-from core.RFAstBuilder import RFAstBuilder
-from reflectivity.reifications.reification_generator import RFReificationGenerator
+from reflectivity.core import AstBuilder
+from reflectivity.reifications import ReificationGenerator
 
 
-class RFFlatWrapper(object):
+class FlatWrapper(object):
     def __init__(self, rf_node):
         self.body = []
         self.preambles = []
@@ -14,9 +14,9 @@ class RFFlatWrapper(object):
         self.original_node = rf_node
         self.reifications = set()
         self.node_transformation = []
-        self.builder = RFAstBuilder()
+        self.builder = AstBuilder()
         self.builder.method_node = self.original_node.method_node
-        self.reifyer = RFReificationGenerator()
+        self.reifyer = ReificationGenerator()
 
     def reset_wrapping(self):
         self.body = []

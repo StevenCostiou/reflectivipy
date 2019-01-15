@@ -1,7 +1,7 @@
-from .RFFlatWrapper import RFFlatWrapper
+from .flatwrapper import FlatWrapper
 
 
-class RFCallFlatWrapper(RFFlatWrapper):
+class CallFlatWrapper(FlatWrapper):
     def flatten_children(self):
         self.flattened_children.extend(self.original_node.args)
         self.flattened_children.append(self.extract_receiver_node())

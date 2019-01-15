@@ -1,6 +1,8 @@
 import pytest
 
 import reflectivity
+from reflectivity import MetaLink
+
 from ReflectivityExample import ReflectivityExample
 from ReflectivityExample import call_with_complex_receiver_sample_node
 from ReflectivityExample import value_reification_sample_node
@@ -9,7 +11,6 @@ from ReflectivityExample import value_call_call_reification_sample_node
 from ReflectivityExample import value_name_reification_sample_node
 from ReflectivityExample import method_with_args_sample_node
 
-from core import MetaLink
 
 
 @pytest.fixture(autouse=True)

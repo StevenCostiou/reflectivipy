@@ -2,8 +2,8 @@ import pytest
 
 import reflectivity
 import tests.ReflectivityExample as ReflectivityExample
-from core.MetaLink import MetaLink
-from wrappers import RFFlatWrapper
+from reflectivity import MetaLink
+from reflectivity.wrappers import FlatWrapper
 
 
 @pytest.fixture(autouse=True)
@@ -21,7 +21,7 @@ def test_sort_links():
     node.links.add(after_link)
     node.links.add(instead_link)
 
-    wrapper = RFFlatWrapper(node)
+    wrapper = FlatWrapper(node)
 
     assert len(wrapper.before_links) == 0
     assert len(wrapper.after_links) == 0

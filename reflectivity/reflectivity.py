@@ -1,8 +1,7 @@
 import ast
 from weakref import WeakValueDictionary, WeakSet
-from core.ReflectiveMethod import ReflectiveMethod
-
-from wrappers import flat_wrappers
+from .core import ReflectiveMethod
+from .wrappers import flat_wrappers
 
 rf_methods = WeakValueDictionary()
 

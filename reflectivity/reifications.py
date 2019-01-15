@@ -1,4 +1,5 @@
 import ast
+from .core import AstBuilder
 
 
 class Reification(object):
@@ -100,3 +101,65 @@ class ArgumentReification(Reification):
             args.append(ast.Name(id=arg.id, ctx=ast.Load()))
 
         return ast.List(elts=args, ctx=ast.Load())
+
+
+reifications_dict = {
+    'class': ClassReification,
+    'node': NodeReification,
+    'object': ObjectReification,
+    'method': MethodReification,
+    'sender': SenderReification,
+    'receiver': ReceiverReification,
+    'selector': SelectorReification,
+    'name': NameReification,
+    'value': ValueReification,
+    'old_value': OldValueReification,
+    'new_value': NewValueReification,
+    'arguments': ArgumentReification
+}
+
+
+def reification_for(key, metalink):
+    if key in reifications_dict:
+        return reifications_dict[key]()
+    if key == 'link':
+        return ConstReification(metalink)
+    return ConstReification(key)
+
+
+class ReificationGenerator(object):
+    def __init__(self):
+        self.builder = AstBuilder()
+        self.reification_counter = 0
+        self.arg_list = []
+
+    def generate_reifications(self, rf_node):
+        expressions = []
+
+        for link in rf_node.links:
+            link.reset_reified_arguments()
+
+            for arg in link.arguments:
+                reification = reification_for(arg, link).visit_node(rf_node)
+                rf_name = self.rf_name_for_arg(arg, str(rf_node.rf_id))
+                expressions.append(self.builder.assign_named_value(rf_name, reification))
+                self.add_reified_argument_to_link(self.builder.ast_load(rf_name), link)
+
+            if link.option_arg_as_array:
+                link.reified_arguments.append(self.builder.ast_load_list(self.arg_list))
+                self.arg_list = []
+
+        return expressions
+
+    def add_reified_argument_to_link(self, arg_node, metalink):
+        if metalink.option_arg_as_array:
+            self.arg_list.append(arg_node)
+        else:
+            metalink.reified_arguments.append(arg_node)
+
+    def rf_name_for_arg(self, arg, rf_id):
+        if isinstance(arg, basestring):
+            return arg + '_' + rf_id
+
+        self.reification_counter += 1
+        return 'value_{}_{}'.format(rf_id, self.reification_counter)
