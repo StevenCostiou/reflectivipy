@@ -10,7 +10,9 @@ class AssignFlatWrapper(FlatWrapper):
             self.flattened_children.append(value_node)
             return
 
-        value_assign = self.builder.assign_named_value(self.original_node.temp_name, value_node)
+        value_assign = self.builder.assign_named_value(self.original_node
+                                                        .temp_name,
+                                                        value_node)
         rf_assign = self.builder.build_rf_node(value_assign)
         self.flattened_children.append(rf_assign)
 

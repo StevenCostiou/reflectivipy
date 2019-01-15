@@ -40,7 +40,10 @@ class ReflectiveMethod(object):
         self.init_reflective_method()
 
     def init_reflective_method(self):
-        self.original_ast = AstBuilder().rf_ast_for_method(self.target_entity, self.original_method, self.method_name)
+        builder = AstBuilder()
+        self.original_ast = builder.rf_ast_for_method(self.target_entity,
+                                                      self.original_method,
+                                                      self.method_name)
         self.reflective_ast = copy.deepcopy(self.original_ast)
         self.original_ast.reflective_method = self
 
@@ -62,7 +65,8 @@ class ReflectiveMethod(object):
         self.compile_rf_method(self.reflective_ast, self.method_name)
 
     def invalidate(self):
-        self.reflective_ast.body[0].body = self.original_ast.wrapper.flat_wrap()
+        self.reflective_ast.body[0].body = self.original_ast \
+                                            .wrapper.flat_wrap()
         ast.fix_missing_locations(self.reflective_ast)
         self.recompile()
 
@@ -101,6 +105,8 @@ class AstBuilder(object):
 
     @staticmethod
     def get_method_source(method):
+        while '__rf_original_method__' in method.__func__.func_globals:
+            method = method.__func__.func_globals['__rf_original_method__']
         lines = inspect.getsourcelines(method)
         src = ''
         for line in lines[0]:

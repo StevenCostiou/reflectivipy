@@ -1,4 +1,3 @@
-import copy
 from .flatwrapper import FlatWrapper
 
 

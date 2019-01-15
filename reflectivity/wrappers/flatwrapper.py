@@ -45,7 +45,8 @@ class FlatWrapper(object):
         arguments.extend(link.reified_arguments)
 
         metaobject_node = ast.Const(metaobject)
-        attr_node = ast.Attribute(value=metaobject_node, attr=selector, ctx=ast.Load())
+        attr_node = ast.Attribute(value=metaobject_node, attr=selector,
+                                  ctx=ast.Load())
         call_node = ast.Call(func=attr_node, args=arguments, keywords=[])
 
         return ast.Expr(call_node)
@@ -84,7 +85,8 @@ class FlatWrapper(object):
         return self.body
 
     def should_wrap(self, rf_node):
-        return self.should_wrap_node(rf_node) or self.should_wrap_children(rf_node)
+        return self.should_wrap_node(rf_node) or \
+                    self.should_wrap_children(rf_node)
 
     def should_wrap_node(self, rf_node):
         if rf_node.links:

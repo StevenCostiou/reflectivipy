@@ -38,7 +38,8 @@ class MethodReification(Reification):
     def visit_node(self, rf_node):
         method = rf_node.method_node.reflective_method.target_entity
         method_name = rf_node.method_node.method_name
-        return ConstReification(getattr(method, method_name)).visit_node(rf_node)
+        method_attr = getattr(method, method_name)
+        return ConstReification(method_attr).visit_node(rf_node)
 
 
 class SenderReification(Reification):
@@ -142,11 +143,14 @@ class ReificationGenerator(object):
             for arg in link.arguments:
                 reification = reification_for(arg, link).visit_node(rf_node)
                 rf_name = self.rf_name_for_arg(arg, str(rf_node.rf_id))
-                expressions.append(self.builder.assign_named_value(rf_name, reification))
-                self.add_reified_argument_to_link(self.builder.ast_load(rf_name), link)
+                expressions.append(self.builder
+                                   .assign_named_value(rf_name, reification))
+                self.add_reified_argument_to_link(self.builder
+                                                  .ast_load(rf_name), link)
 
             if link.option_arg_as_array:
-                link.reified_arguments.append(self.builder.ast_load_list(self.arg_list))
+                link.reified_arguments.append(self.builder
+                                              .ast_load_list(self.arg_list))
                 self.arg_list = []
 
         return expressions

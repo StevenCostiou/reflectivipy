@@ -18,7 +18,8 @@ class ReturnFlatWrapper(FlatWrapper):
         super(ReturnFlatWrapper, self).basic_wrap()
         self.append_links(self.additional_after_links)
         builder = self.builder
-        return_node = ast.Return(builder.ast_load(self.original_node.temp_name))
+        return_node = ast.Return(builder.
+                                 ast_load(self.original_node.temp_name))
         self.body.append(builder.build_rf_node(return_node))
         return self.body
 

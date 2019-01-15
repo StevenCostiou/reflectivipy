@@ -5,6 +5,11 @@ from tests.ReflectivityExample import ReflectivityExample
 from reflectivity import MetaLink
 
 
+@pytest.fixture(autouse=True)
+def setup():
+    reflectivity.uninstall_all()
+
+
 def test_wrap_method_node():
     example = ReflectivityExample()
 

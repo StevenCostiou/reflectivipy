@@ -1,7 +1,5 @@
-import ast
 from weakref import WeakValueDictionary, WeakSet
 from .core import ReflectiveMethod
-from .wrappers import flat_wrappers
 
 rf_methods = WeakValueDictionary()
 
@@ -9,7 +7,8 @@ metalinks = WeakSet()
 nodes_with_links = WeakSet()
 
 
-# Finds the rf_ast for the given method name, or generates it if it does not exist
+# Finds the rf_ast for the given method name,
+# or generates it if it does not exist
 def rf_ast_for_method(class_or_object, method_name):
     return reflective_method_for(class_or_object, method_name).original_ast
 
