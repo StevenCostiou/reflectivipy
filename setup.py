@@ -21,7 +21,7 @@ setup(
     keywords='object-centric partial-behavior-reflection metaprogramming',
     url='https://github.com/.../...',
     author='Steven Coustiou',
-    author_email='steven.coustiou@inria.fr',
+    author_email='steven.coustiou@abc.fr',
 
     packages=packages,
     package_data={'': ['README.rst']},
