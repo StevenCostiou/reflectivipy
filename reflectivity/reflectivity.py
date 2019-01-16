@@ -7,9 +7,11 @@ metalinks = WeakSet()
 nodes_with_links = WeakSet()
 
 
-# Finds the rf_ast for the given method name,
-# or generates it if it does not exist
-def rf_ast_for_method(class_or_object, method_name):
+def reflective_ast_for_method(class_or_object, method_name):
+    """
+    Finds the reflective AST for the given method name, or generates it if it
+    does not exist
+    """
     return reflective_method_for(class_or_object, method_name).original_ast
 
 

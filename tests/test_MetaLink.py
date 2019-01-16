@@ -15,7 +15,7 @@ def test_link_to_node():
     example = ReflectivityExample()
 
     link = MetaLink(example, 'tag_exec', 'before', [])
-    rf_node = reflectivity.rf_ast_for_method(ReflectivityExample, 'example_method')
+    rf_node = reflectivity.reflective_ast_for_method(ReflectivityExample, 'example_method')
 
     reflectivity.link(link, rf_node)
 

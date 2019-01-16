@@ -14,7 +14,7 @@ def test_wrap_method_node():
     example = ReflectivityExample()
 
     link = MetaLink(example, 'tag_exec_', 'before', [])
-    ast = reflectivity.rf_ast_for_method(ReflectivityExample, 'example_method')
+    ast = reflectivity.reflective_ast_for_method(ReflectivityExample, 'example_method')
 
     reflectivity.link(link, ast)
 

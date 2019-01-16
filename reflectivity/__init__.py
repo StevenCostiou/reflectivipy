@@ -3,7 +3,7 @@ Reflectivity implementation for Python base package
 """
 from .reflectivity import (
     link,
-    rf_ast_for_method,
+    reflective_ast_for_method,
     reflective_method_for,
     uninstall_all,
     metalinks,
@@ -15,7 +15,7 @@ __version__ = "0.0.1"
 
 __all__ = [
     "link",
-    "rf_ast_for_method",
+    "reflective_ast_for_method",
     "reflective_method_for",
     "uninstall_all",
     "metalinks",
