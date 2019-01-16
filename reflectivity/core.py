@@ -24,6 +24,7 @@ class MetaLink(object):
         nodes = [from_node] if from_node else list(self.nodes)
         for node in nodes:
             self.remove_node(node)
+            node.method_node.reflective_method.restore()
 
     def reset_reified_arguments(self):
         self.reified_arguments = []
@@ -104,6 +105,7 @@ class AstBuilder(object):
 
     @staticmethod
     def get_method_source(method):
+        # tmp patch
         while "__rf_original_method__" in method.__func__.func_globals:
             method = method.__func__.func_globals["__rf_original_method__"]
         lines = inspect.getsourcelines(method)
