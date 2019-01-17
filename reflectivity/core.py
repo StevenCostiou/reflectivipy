@@ -55,6 +55,7 @@ class ReflectiveMethod(object):
         locs = {}
         compiled_method = compile(rf_ast, "<ast>", "exec")
         global_vars = {"__rf_original_method__": self.original_method}
+        global_vars.update(self.original_method.__func__.func_globals)
         eval(compiled_method, global_vars, locs)
         if not inspect.isclass(self.target_entity):
             method = locs[method_name].__get__(self.target_entity)
