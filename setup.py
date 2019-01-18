@@ -2,29 +2,29 @@
 
 import sys
 from setuptools import setup
-import reflectivity
+import reflectivipy
 
 
 if sys.version_info > (2, 8) or 'PyPy' not in sys.copyright:
-    sys.exit('Sorry, Reflectivity is only for Pypy 2.7 at the moment!')
+    sys.exit('Sorry, Reflectivipy is only for Pypy 2.7 at the moment!')
 
 
-packages = ['reflectivity',
-            'reflectivity.wrappers']
+packages = ['reflectivipy',
+            'reflectivipy.wrappers']
 
 setup(
-    name='reflectivity',
-    version=reflectivity.__version__,
+    name='reflectivipy',
+    version=reflectivipy.__version__,
     description=('A Python Implementation of the Reflectivity API from '
                  'the Pharo language'),
     long_description=open('README.rst').read(),
     keywords='object-centric partial-behavior-reflection metaprogramming',
-    url='https://github.com/.../...',
-    author='Steven Coustiou',
-    author_email='steven.coustiou@abc.fr',
+    url='https://github.com/StevenCostiou/reflectivipy',
+    author='Steven Costiou',
+    author_email='steven.costiou@abc.fr',
 
     packages=packages,
-    package_data={'': ['README.rst']},
+    package_data={'': ['README.rst', 'LICENCE']},
     include_package_data=True,
     tests_require=['pytest'],
     classifiers=[
