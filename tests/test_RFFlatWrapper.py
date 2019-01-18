@@ -1,14 +1,14 @@
 import pytest
 
-import reflectivity
+import reflectivipy
 import tests.ReflectivityExample as ReflectivityExample
-from reflectivity import MetaLink
-from reflectivity.wrappers import FlatWrapper
+from reflectivipy import MetaLink
+from reflectivipy.wrappers import FlatWrapper
 
 
 @pytest.fixture(autouse=True)
 def setup():
-    reflectivity.uninstall_all()
+    reflectivipy.uninstall_all()
 
 
 def test_sort_links():

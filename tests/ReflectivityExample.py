@@ -1,58 +1,58 @@
-import reflectivity
+import reflectivipy
 
 
 def sample_node():
-    rf_ast = reflectivity.reflective_method_for(ReflectivityExample, 'example_assign')
+    rf_ast = reflectivipy.reflective_method_for(ReflectivityExample, 'example_assign')
     return rf_ast.original_ast.body[0].body[0]
 
 
 def expr_sample_node():
-    rf_ast = reflectivity.reflective_method_for(ReflectivityExample, 'm3')
+    rf_ast = reflectivipy.reflective_method_for(ReflectivityExample, 'm3')
     return rf_ast.original_ast.body[0].body[0]
 
 
 def call_sample_node():
-    rf_ast = reflectivity.reflective_method_for(ReflectivityExample, 'm3')
+    rf_ast = reflectivipy.reflective_method_for(ReflectivityExample, 'm3')
     return rf_ast.original_ast.body[0].body[0]
 
 
 def complex_call_sample_node():
-    rf_ast = reflectivity.reflective_method_for(ReflectivityExample, 'example_method')
+    rf_ast = reflectivipy.reflective_method_for(ReflectivityExample, 'example_method')
     return rf_ast.original_ast.body[0].body[1]
 
 
 def complex_expr_call_sample_node():
-    rf_ast = reflectivity.reflective_method_for(ReflectivityExample, 'm4')
+    rf_ast = reflectivipy.reflective_method_for(ReflectivityExample, 'm4')
     return rf_ast.original_ast.body[0].body[0]
 
 
 def call_with_complex_receiver_sample_node():
-    rf_ast = reflectivity.reflective_method_for(ReflectivityExample, 'm5')
+    rf_ast = reflectivipy.reflective_method_for(ReflectivityExample, 'm5')
     return rf_ast.original_ast.body[0].body[0]
 
 
 def value_reification_sample_node():
-    rf_ast = reflectivity.reflective_method_for(ReflectivityExample, 'example_value_reification')
+    rf_ast = reflectivipy.reflective_method_for(ReflectivityExample, 'example_value_reification')
     return rf_ast.original_ast.body[0].body[1]
 
 
 def value_call_reification_sample_node():
-    rf_ast = reflectivity.reflective_method_for(ReflectivityExample, 'example_value_call_reification')
+    rf_ast = reflectivipy.reflective_method_for(ReflectivityExample, 'example_value_call_reification')
     return rf_ast.original_ast.body[0].body[1]
 
 
 def value_call_call_reification_sample_node():
-    rf_ast = reflectivity.reflective_method_for(ReflectivityExample, 'example_value_call_call_reification')
+    rf_ast = reflectivipy.reflective_method_for(ReflectivityExample, 'example_value_call_call_reification')
     return rf_ast.original_ast.body[0].body[1]
 
 
 def value_name_reification_sample_node():
-    rf_ast = reflectivity.reflective_method_for(ReflectivityExample, 'example_value_name_reification')
+    rf_ast = reflectivipy.reflective_method_for(ReflectivityExample, 'example_value_name_reification')
     return rf_ast.original_ast.body[0].body[1].value.args[0]
 
 
 def method_with_args_sample_node():
-    rf_ast = reflectivity.reflective_method_for(ReflectivityExample, 'method_with_args')
+    rf_ast = reflectivipy.reflective_method_for(ReflectivityExample, 'method_with_args')
     return rf_ast.original_ast
 
 

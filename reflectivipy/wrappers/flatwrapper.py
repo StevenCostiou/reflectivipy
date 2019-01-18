@@ -1,6 +1,6 @@
 import ast
-from reflectivity.core import AstBuilder
-from reflectivity.reifications import ReificationGenerator
+from ..core import AstBuilder
+from ..reifications import ReificationGenerator
 
 
 class FlatWrapper(object):
