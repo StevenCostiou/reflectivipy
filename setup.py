@@ -36,7 +36,7 @@ setup(
         'Intended Audience :: Developers',
         'Topic :: Software Development',
         'Topic :: Software Development :: Libraries',
-        'Topic :: Software Development :: Code generators',
+        'Topic :: Software Development :: Code Generators',
         'Topic :: Software Development :: Debuggers'
     ]
 )
