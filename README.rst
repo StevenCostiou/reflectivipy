@@ -2,7 +2,8 @@
 Reflectivity: A Python Implementation of the Reflectivity API from the Pharo language
 =====================================================================================
 |Downloads|
-.. |Downloads| image::https://pepy.tech/badge/reflectivipy :target: https://pepy.tech/project/reflectivipy
+
+.. |Downloads|image::https://pepy.tech/badge/reflectivipy :target: https://pepy.tech/project/reflectivipy
 
 Reflectivipy is an API inspired by `Reflectivity in Pharo
 <http://scg.unibe.ch/research/reflectivity>`_. Reflectivity allows you to deal
