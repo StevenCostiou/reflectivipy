@@ -110,7 +110,7 @@ class FlatWrapper(object):
 
     def append_node_transformation(self):
         if self.instead_links:
-            self.body.append(self.instead_links.reverse()[0])
+            self.body.append(self.gen_link_node(self.instead_links[0]))
             return
 
         for node in self.node_transformation:

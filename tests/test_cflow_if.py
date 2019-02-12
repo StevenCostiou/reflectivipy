@@ -36,6 +36,19 @@ def test_link_after_if():
     assert example.tag == 'tag'
 
 
+def test_link_instead_if():
+    example = ReflectivityExample()
+    link = MetaLink(example, 'tag_exec_', 'instead', [])
+    rf_ast = reflectivipy.reflective_method_for(ReflectivityExample, 'example_multiple_return')
+    node = rf_ast.original_ast.body[0].body[0]
+
+    reflectivipy.link(link, node)
+
+    assert example.tag is None
+    assert ReflectivityExample().example_multiple_return(1) == 2
+    assert example.tag == 'tag'
+
+
 def test_link_before_after_if():
     example = ReflectivityExample()
     before_link = MetaLink(example, 'tag_push', 'before', [1])
