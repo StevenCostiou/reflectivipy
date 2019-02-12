@@ -1,7 +1,7 @@
 import copy
 import ast
 import inspect
-from inspect import isfunction, ismethod, isclass
+from inspect import isfunction, ismethod, isclass, ismodule
 
 
 # must adapt for Python 3 in the future
@@ -81,7 +81,7 @@ class ReflectiveMethod(object):
         global_vars = {"__rf_original_method__": self.original_method}
         global_vars.update(self.original_method.func_globals)
         eval(compiled_method, global_vars, locs)
-        if not inspect.isclass(self.target_entity):
+        if not (isclass(self.target_entity) or ismodule(self.target_entity)):
             method = locs[method_name].__get__(self.target_entity)
         else:
             method = locs[method_name]

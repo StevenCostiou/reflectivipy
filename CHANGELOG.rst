@@ -13,6 +13,9 @@ Changelog
 - Add support for decorators. This new implementation search for the function at the
   most "lower" level for methods and gets the function pointed by the decorators.
 
+- Add support for modules. This new implementation is able to install metalinks
+  on function at a module level.
+
 
 0.0.1
 +++++
