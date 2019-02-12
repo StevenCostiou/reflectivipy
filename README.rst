@@ -86,6 +86,7 @@ Currently, Reflectivity is not yet on ``pypi``, so you can install it using
 ``pip``. It is recommanded to install it in the virtualenv.
 
 .. code-block:: bash
+
     $ pip install -e .
 
 
