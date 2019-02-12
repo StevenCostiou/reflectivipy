@@ -1,6 +1,30 @@
 import copy
 import ast
 import inspect
+from inspect import isfunction, ismethod, isclass
+
+
+# must adapt for Python 3 in the future
+def remove_decorators(func):
+    closure = func.func_closure
+    if closure:
+        for cell in closure:
+            contents = cell.cell_contents
+            if contents is func:
+                continue
+
+            if (
+                inspect.isfunction(contents)
+                or inspect.ismethod(contents)
+                or inspect.isclass(contents)
+            ):
+                new_func = remove_decorators(contents)
+                if new_func:
+                    return new_func
+        else:
+            return func
+    else:
+        return func
 
 
 class MetaLink(object):
@@ -55,7 +79,7 @@ class ReflectiveMethod(object):
         locs = {}
         compiled_method = compile(rf_ast, "<ast>", "exec")
         global_vars = {"__rf_original_method__": self.original_method}
-        global_vars.update(self.original_method.__func__.func_globals)
+        global_vars.update(self.original_method.func_globals)
         eval(compiled_method, global_vars, locs)
         if not inspect.isclass(self.target_entity):
             method = locs[method_name].__get__(self.target_entity)
@@ -106,13 +130,16 @@ class AstBuilder(object):
 
     @staticmethod
     def get_method_source(method):
+        method = remove_decorators(method)
         # tmp patch
-        while "__rf_original_method__" in method.__func__.func_globals:
-            method = method.__func__.func_globals["__rf_original_method__"]
+        while "__rf_original_method__" in method.func_globals:
+            method = method.func_globals["__rf_original_method__"]
         lines = inspect.getsourcelines(method)
+        first_line = lines[0][0]
+        indent = len(first_line) - len(first_line.lstrip())
         src = ""
         for line in lines[0]:
-            src += line[4:]
+            src += line[indent:]
         return src
 
     @classmethod
