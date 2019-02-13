@@ -85,12 +85,12 @@ The code remains then exactly the same.
 Installation
 ============
 
-Currently, Reflectivity is not yet on ``pypi``, so you can install it using
+Currently, Reflectivity is now on ``pypi``, so you can install it using
 ``pip``. It is recommanded to install it in the virtualenv.
 
 .. code-block:: bash
 
-    $ pip install -e .
+    $ pip install reflectivipy.
 
 
 Quick Start
