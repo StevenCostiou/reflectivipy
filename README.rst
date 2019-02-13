@@ -90,7 +90,7 @@ Currently, Reflectivity is now on ``pypi``, so you can install it using
 
 .. code-block:: bash
 
-    $ pip install reflectivipy.
+    $ pip install reflectivipy
 
 
 Quick Start
