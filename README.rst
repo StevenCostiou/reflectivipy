@@ -1,5 +1,5 @@
 =====================================================================================
-Reflectivity: A Python Implementation of the Reflectivity API from the Pharo language
+Reflectivipy: A Python Implementation of the Reflectivity API from the Pharo language
 =====================================================================================
 |Downloads|
 
