@@ -3,9 +3,6 @@ import ast
 import inspect
 from inspect import isfunction, ismethod, isclass, ismodule
 
-#import sys
-#sys.setrecursionlimit(1500)
-
 
 # must adapt for Python 3 in the future
 def remove_decorators(func):
@@ -16,11 +13,7 @@ def remove_decorators(func):
             if contents is func:
                 continue
 
-            if (
-                inspect.isfunction(contents)
-                or inspect.ismethod(contents)
-                or inspect.isclass(contents)
-            ):
+            if isfunction(contents) or ismethod(contents) or isclass(contents):
                 new_func = remove_decorators(contents)
                 if new_func:
                     return new_func
@@ -71,7 +64,9 @@ class ReflectiveMethod(object):
 
     def init_reflective_method(self):
         builder = AstBuilder()
-        self.original_ast = builder.rf_ast_for_method(self.target_entity, self.original_method, self.method_name)
+        self.original_ast = builder.rf_ast_for_method(
+            self.target_entity, self.original_method, self.method_name
+        )
 
         self.reflective_ast = copy.deepcopy(self.original_ast)
         self.original_ast.reflective_method = self
@@ -94,7 +89,10 @@ class ReflectiveMethod(object):
     def compile_rf_method(self, rf_ast, method_name):
         locs = {}
         compiled_method = compile(rf_ast, "<ast>", "exec")
-        global_vars = {"__rf_original_method__": self.original_method, "__rf_method__": self}
+        global_vars = {
+            "__rf_original_method__": self.original_method,
+            "__rf_method__": self,
+        }
         global_vars.update(self.original_method.__globals__)
 
         eval(compiled_method, global_vars, locs)

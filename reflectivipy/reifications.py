@@ -19,7 +19,11 @@ class LiteralValueReification(Reification):
 
     def visit_node(self, rf_node, metalink):
         rf_node.method_node.reflective_method.add_literal_value_reification(self.value)
-        attr_node = ast.Attribute(value=rf_method_reification(), attr="get_literal_value_reifications", ctx=ast.Load())
+        attr_node = ast.Attribute(
+            value=rf_method_reification(),
+            attr="get_literal_value_reifications",
+            ctx=ast.Load(),
+        )
         return ast.Call(func=attr_node, args=[ast.Num(id(self.value))], keywords=[])
 
 
@@ -30,7 +34,9 @@ class LinkReification(Reification):
 
 class ClassReification(Reification):
     def visit_node(self, rf_node, metalink):
-        return ast.Attribute(value=node_reification(), attr="method_class", ctx=ast.Load())
+        return ast.Attribute(
+            value=node_reification(), attr="method_class", ctx=ast.Load()
+        )
 
 
 class ObjectReification(Reification):
@@ -40,8 +46,16 @@ class ObjectReification(Reification):
 
 class NodeReification(Reification):
     def visit_node(self, rf_node, metalink):
-        attr_node = ast.Attribute(value=rf_method_reification(), attr="find_node_of_id_in_link", ctx=ast.Load())
-        return ast.Call(func=attr_node, args=[ast.Num(rf_node.rf_id), link_reification(metalink)], keywords=[])
+        attr_node = ast.Attribute(
+            value=rf_method_reification(),
+            attr="find_node_of_id_in_link",
+            ctx=ast.Load(),
+        )
+        return ast.Call(
+            func=attr_node,
+            args=[ast.Num(rf_node.rf_id), link_reification(metalink)],
+            keywords=[],
+        )
 
 
 class MethodReification(Reification):
@@ -51,7 +65,9 @@ class MethodReification(Reification):
 
 class SenderReification(Reification):
     def visit_node(self, rf_node, metalink):
-        method_node_node = ast.Attribute(value=node_reification(), attr="method_node", ctx=ast.Load())
+        method_node_node = ast.Attribute(
+            value=node_reification(), attr="method_node", ctx=ast.Load()
+        )
         return ast.Attribute(value=method_node_node, attr="method_name", ctx=ast.Load())
 
 
@@ -124,7 +140,7 @@ reifications_dict = {
     "old_value": OldValueReification,
     "new_value": NewValueReification,
     "arguments": ArgumentReification,
-    "link": LinkReification
+    "link": LinkReification,
 }
 
 
@@ -141,16 +157,22 @@ def rf_method_reification():
 def link_reification(link):
     link_id_node = ast.Num(id(link))
 
-    link_attr_node = ast.Attribute(value=rf_method_reification(), attr="lookup_link", ctx=ast.Load())
+    link_attr_node = ast.Attribute(
+        value=rf_method_reification(), attr="lookup_link", ctx=ast.Load()
+    )
     return ast.Call(func=link_attr_node, args=[link_id_node], keywords=[])
 
 
 def node_reification():
-    return ast.Attribute(value=rf_method_reification(), attr="reflective_ast", ctx=ast.Load())
+    return ast.Attribute(
+        value=rf_method_reification(), attr="reflective_ast", ctx=ast.Load()
+    )
 
 
 def original_method_reification():
-    return ast.Attribute(value=rf_method_reification(), attr="original_method", ctx=ast.Load())
+    return ast.Attribute(
+        value=rf_method_reification(), attr="original_method", ctx=ast.Load()
+    )
 
 
 class ReificationGenerator(object):

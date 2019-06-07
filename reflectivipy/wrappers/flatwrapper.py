@@ -41,8 +41,12 @@ class FlatWrapper(object):
         arguments = []
         arguments.extend(link.reified_arguments)
 
-        metaobject_node = ast.Attribute(value=link_reification(link), attr="metaobject", ctx=ast.Load())
-        attr_node = ast.Attribute(value=metaobject_node, attr=link.selector, ctx=ast.Load())
+        metaobject_node = ast.Attribute(
+            value=link_reification(link), attr="metaobject", ctx=ast.Load()
+        )
+        attr_node = ast.Attribute(
+            value=metaobject_node, attr=link.selector, ctx=ast.Load()
+        )
         call_node = ast.Call(func=attr_node, args=arguments, keywords=[])
 
         return ast.Expr(call_node)
