@@ -17,9 +17,9 @@ def test_sort_links():
     instead_link = MetaLink(None, None, 'instead', [])
     node = ReflectivityExample.sample_node()
 
-    node.links.add(before_link)
-    node.links.add(after_link)
-    node.links.add(instead_link)
+    node.links.append(before_link)
+    node.links.append(after_link)
+    node.links.append(instead_link)
 
     wrapper = FlatWrapper(node)
 

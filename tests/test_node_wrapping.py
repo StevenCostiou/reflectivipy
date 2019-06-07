@@ -20,7 +20,7 @@ def test_wrap_expr():
     assert transformation[0] is node
 
     link = MetaLink(ReflectivityExample(), 'tag_exec_', 'before', [])
-    node.links.add(link)
+    node.links.append(link)
 
     assert type(node) is ast.Expr
     transformation = node.wrapper.flat_wrap()
@@ -38,7 +38,7 @@ def test_wrap_call():
     assert transformation[0] is node
 
     link = MetaLink(ReflectivityExample(), 'tag_exec_', 'before', [])
-    node.links.add(link)
+    node.links.append(link)
 
     assert type(node) is ast.Call
 
@@ -58,7 +58,7 @@ def test_wrap_call_in_assign():
     node = method_with_args_sample_node().body[0].body[0]
 
     link = MetaLink(ReflectivityExample(), 'tag_exec_', 'before', [])
-    node.value.links.add(link)
+    node.value.links.append(link)
 
     assert type(node) is ast.Assign
     assert type(node.value) is ast.Call
@@ -80,7 +80,7 @@ def test_wrap_complex_expr_call():
     node = complex_expr_call_sample_node()
 
     link = MetaLink(ReflectivityExample(), 'tag_exec_', 'before', [])
-    node.value.args[0].links.add(link)
+    node.value.args[0].links.append(link)
 
     transformation = node.wrapper.flat_wrap()
     assert len(transformation) == 6
@@ -92,7 +92,7 @@ def test_wrap_complex_expr_call():
 def test_call_receiver_flattening():
     node = call_with_complex_receiver_sample_node()
     link = MetaLink(ReflectivityExample(), 'tag_exec_', 'before', [])
-    node.value.links.add(link)
+    node.value.links.append(link)
 
     transformation = node.wrapper.flat_wrap()
     assert len(transformation) == 4
@@ -103,7 +103,7 @@ def test_call_receiver_flattening():
 def test_call_flattening():
     node = call_with_complex_receiver_sample_node()
     link = MetaLink(ReflectivityExample(), 'tag_exec_', 'before', [])
-    node.value.func.value.links.add(link)
+    node.value.func.value.links.append(link)
 
     transformation = node.wrapper.flat_wrap()
     assert len(transformation) == 5
@@ -122,7 +122,7 @@ def test_wrap_assign():
     assert transformation[0] is node
 
     link = MetaLink(ReflectivityExample(), 'tag_exec_', 'before', [])
-    node.links.add(link)
+    node.links.append(link)
 
     assert type(node) is ast.Assign
 

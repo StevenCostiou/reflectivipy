@@ -358,6 +358,7 @@ def test_value_with_call_call_reification():
 
     working_example.example_value_call_call_reification()
     assert len(example.tagged_reifications) == 3
+    print(example.tagged_reifications)
     assert example.tagged_reifications[0] == 1
     assert example.tagged_reifications[1] == 1
     assert example.tagged_reifications[2] == 2

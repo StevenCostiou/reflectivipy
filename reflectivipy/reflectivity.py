@@ -31,7 +31,7 @@ def link(metalink, rf_node):
     nodes_with_links.add(rf_node)
 
     metalink.add_node(rf_node)
-    rf_node.links.add(metalink)
+    rf_node.links.append(metalink)
     rf_method = rf_node.method_node.reflective_method
     rf_method.add_link(metalink)
     rf_method.invalidate()

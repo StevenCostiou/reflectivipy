@@ -224,7 +224,7 @@ class AstBuilder(object):
         node.method_node = self.method_node
 
         node.method_class = self.method_node.method_class
-        node.links = set()
+        node.links = list()
 
         from .wrappers import flat_wrappers
 
