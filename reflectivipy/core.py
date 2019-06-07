@@ -173,8 +173,18 @@ class AstBuilder(object):
         self.method_node = node
         self.method_node.is_method = True
         self.visit_node(self.method_node)
+        self.visit_clear_twins(node)
         self.visit_twins(copy.deepcopy(node))
         return node
+
+    # We clear the twins before copying nodes,
+    # to avoid recursions during deep copies.
+    # Twins are set back in visit_twins
+    def visit_clear_twins(self, node):
+        for node in ast.iter_child_nodes(node):
+            original_node = self.flattened_nodes[node.rf_id]
+            original_node.twin = None
+            self.visit_twins(node)
 
     def visit_twins(self, copy_node):
         for node in ast.iter_child_nodes(copy_node):

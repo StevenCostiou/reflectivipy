@@ -98,8 +98,8 @@ class ArgumentReification(Reification):
     def visit_FunctionDef(self, rf_node, metalink):
         args = []
         for arg in rf_node.args.args:
-            if not arg.id == "self":
-                args.append(ast.Name(id=arg.id, ctx=ast.Load()))
+            if not arg.arg == "self":
+                args.append(ast.Name(id=arg.arg, ctx=ast.Load()))
 
         return ast.List(elts=args, ctx=ast.Load())
 

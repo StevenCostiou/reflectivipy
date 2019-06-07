@@ -1,6 +1,6 @@
 import pytest
 import ast
-from .ReflectivityExample import ReflectivityExample
+from .ReflectivityExample import *
 import reflectivipy
 from reflectivipy import MetaLink
 
@@ -11,7 +11,7 @@ def setup():
 
 
 def test_wrap_expr():
-    node = ReflectivityExample.expr_sample_node()
+    node = expr_sample_node()
 
     assert type(node) is ast.Expr
 
@@ -19,7 +19,7 @@ def test_wrap_expr():
     assert len(transformation) == 1
     assert transformation[0] is node
 
-    link = MetaLink(ReflectivityExample.ReflectivityExample(), 'tag_exec_', 'before', [])
+    link = MetaLink(ReflectivityExample(), 'tag_exec_', 'before', [])
     node.links.add(link)
 
     assert type(node) is ast.Expr
@@ -29,7 +29,7 @@ def test_wrap_expr():
 
 
 def test_wrap_call():
-    node = ReflectivityExample.call_sample_node().value
+    node = call_sample_node().value
 
     assert type(node) is ast.Call
 
@@ -37,7 +37,7 @@ def test_wrap_call():
     assert len(transformation) == 1
     assert transformation[0] is node
 
-    link = MetaLink(ReflectivityExample.ReflectivityExample(), 'tag_exec_', 'before', [])
+    link = MetaLink(ReflectivityExample(), 'tag_exec_', 'before', [])
     node.links.add(link)
 
     assert type(node) is ast.Call
@@ -55,9 +55,9 @@ def test_wrap_call():
 
 
 def test_wrap_call_in_assign():
-    node = ReflectivityExample.method_with_args_sample_node().body[0].body[0]
+    node = method_with_args_sample_node().body[0].body[0]
 
-    link = MetaLink(ReflectivityExample.ReflectivityExample(), 'tag_exec_', 'before', [])
+    link = MetaLink(ReflectivityExample(), 'tag_exec_', 'before', [])
     node.value.links.add(link)
 
     assert type(node) is ast.Assign
@@ -77,9 +77,9 @@ def test_wrap_call_in_assign():
 
 
 def test_wrap_complex_expr_call():
-    node = ReflectivityExample.complex_expr_call_sample_node()
+    node = complex_expr_call_sample_node()
 
-    link = MetaLink(ReflectivityExample.ReflectivityExample(), 'tag_exec_', 'before', [])
+    link = MetaLink(ReflectivityExample(), 'tag_exec_', 'before', [])
     node.value.args[0].links.add(link)
 
     transformation = node.wrapper.flat_wrap()
@@ -90,8 +90,8 @@ def test_wrap_complex_expr_call():
 
 
 def test_call_receiver_flattening():
-    node = ReflectivityExample.call_with_complex_receiver_sample_node()
-    link = MetaLink(ReflectivityExample.ReflectivityExample(), 'tag_exec_', 'before', [])
+    node = call_with_complex_receiver_sample_node()
+    link = MetaLink(ReflectivityExample(), 'tag_exec_', 'before', [])
     node.value.links.add(link)
 
     transformation = node.wrapper.flat_wrap()
@@ -101,8 +101,8 @@ def test_call_receiver_flattening():
 
 
 def test_call_flattening():
-    node = ReflectivityExample.call_with_complex_receiver_sample_node()
-    link = MetaLink(ReflectivityExample.ReflectivityExample(), 'tag_exec_', 'before', [])
+    node = call_with_complex_receiver_sample_node()
+    link = MetaLink(ReflectivityExample(), 'tag_exec_', 'before', [])
     node.value.func.value.links.add(link)
 
     transformation = node.wrapper.flat_wrap()
@@ -113,7 +113,7 @@ def test_call_flattening():
 
 
 def test_wrap_assign():
-    node = ReflectivityExample.sample_node()
+    node = sample_node()
 
     assert type(node) is ast.Assign
 
@@ -121,7 +121,7 @@ def test_wrap_assign():
     assert len(transformation) == 1
     assert transformation[0] is node
 
-    link = MetaLink(ReflectivityExample.ReflectivityExample(), 'tag_exec_', 'before', [])
+    link = MetaLink(ReflectivityExample(), 'tag_exec_', 'before', [])
     node.links.add(link)
 
     assert type(node) is ast.Assign
