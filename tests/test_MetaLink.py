@@ -11,6 +11,21 @@ def setup():
     reflectivipy.uninstall_all()
 
 
+def test_globals_metalink_registry():
+    example = ReflectivityExample()
+
+    link = MetaLink(example, 'tag_exec', 'before', [])
+    rf_node = reflectivipy.reflective_ast_for_method(ReflectivityExample, 'example_method')
+
+    reflectivipy.link(link, rf_node)
+
+    rf_method = reflectivipy.reflective_method_for(ReflectivityExample, 'example_method')
+    method_globals = ReflectivityExample.example_method.func_globals
+
+    assert method_globals["__rf_method__"] is rf_method
+    assert method_globals["__rf_method__"].lookup_link(id(link)) is link
+
+
 def test_link_to_node():
     example = ReflectivityExample()
 
@@ -31,6 +46,7 @@ def test_uninstall():
 
 
 decorator_counter = 0
+
 
 def decorate_with(increment):
     def decorator(f):

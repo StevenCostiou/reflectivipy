@@ -31,11 +31,10 @@ def link(metalink, rf_node):
     nodes_with_links.add(rf_node)
 
     metalink.add_node(rf_node)
-    # import ast
-    # if isinstance(rf_node, ast.Expr):
-    #     rf_node = rf_node.value
     rf_node.links.add(metalink)
-    rf_node.method_node.reflective_method.invalidate()
+    rf_method = rf_node.method_node.reflective_method
+    rf_method.add_link(metalink)
+    rf_method.invalidate()
 
 
 def uninstall_all():

@@ -62,6 +62,7 @@ class ReflectiveMethod(object):
         self.original_ast = None
         self.reflective_ast = None
         self.links = set()
+        self.link_registry = dict()
         self.init_reflective_method()
 
     def init_reflective_method(self):
@@ -72,19 +73,25 @@ class ReflectiveMethod(object):
         self.reflective_ast = copy.deepcopy(self.original_ast)
         self.original_ast.reflective_method = self
 
-    def link(self, metalink):
+    def lookup_link(self, metalink_id):
+        return self.link_registry[metalink_id]
+
+    def add_link(self, metalink):
         self.links.add(metalink)
+        self.link_registry[id(metalink)] = metalink
 
     def compile_rf_method(self, rf_ast, method_name):
         locs = {}
         compiled_method = compile(rf_ast, "<ast>", "exec")
-        global_vars = {"__rf_original_method__": self.original_method}
+        global_vars = {"__rf_original_method__": self.original_method, "__rf_method__": self}
         global_vars.update(self.original_method.func_globals)
+
         eval(compiled_method, global_vars, locs)
         if not (isclass(self.target_entity) or ismodule(self.target_entity)):
             method = locs[method_name].__get__(self.target_entity)
         else:
             method = locs[method_name]
+
         setattr(self.target_entity, method_name, method)
 
     def recompile(self):
