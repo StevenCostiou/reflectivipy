@@ -20,7 +20,7 @@ def test_globals_metalink_registry():
     reflectivipy.link(link, rf_node)
 
     rf_method = reflectivipy.reflective_method_for(ReflectivityExample, 'example_method')
-    method_globals = ReflectivityExample.example_method.func_globals
+    method_globals = ReflectivityExample.example_method.__globals__
 
     assert method_globals["__rf_method__"] is rf_method
     assert method_globals["__rf_method__"].lookup_link(id(link)) is link

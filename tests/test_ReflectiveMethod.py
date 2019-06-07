@@ -1,7 +1,7 @@
 import pytest
 
 import reflectivipy
-from ReflectivityExample import ReflectivityExample
+from .ReflectivityExample import ReflectivityExample
 from reflectivipy import MetaLink
 
 

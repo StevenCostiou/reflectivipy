@@ -1,6 +1,6 @@
 import pytest
 import ast
-import ReflectivityExample
+from .ReflectivityExample import ReflectivityExample
 import reflectivipy
 from reflectivipy import MetaLink
 

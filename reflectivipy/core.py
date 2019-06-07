@@ -3,10 +3,13 @@ import ast
 import inspect
 from inspect import isfunction, ismethod, isclass, ismodule
 
+#import sys
+#sys.setrecursionlimit(1500)
+
 
 # must adapt for Python 3 in the future
 def remove_decorators(func):
-    closure = func.func_closure
+    closure = func.__closure__
     if closure:
         for cell in closure:
             contents = cell.cell_contents
@@ -68,9 +71,8 @@ class ReflectiveMethod(object):
 
     def init_reflective_method(self):
         builder = AstBuilder()
-        self.original_ast = builder.rf_ast_for_method(
-            self.target_entity, self.original_method, self.method_name
-        )
+        self.original_ast = builder.rf_ast_for_method(self.target_entity, self.original_method, self.method_name)
+
         self.reflective_ast = copy.deepcopy(self.original_ast)
         self.original_ast.reflective_method = self
 
@@ -93,7 +95,7 @@ class ReflectiveMethod(object):
         locs = {}
         compiled_method = compile(rf_ast, "<ast>", "exec")
         global_vars = {"__rf_original_method__": self.original_method, "__rf_method__": self}
-        global_vars.update(self.original_method.func_globals)
+        global_vars.update(self.original_method.__globals__)
 
         eval(compiled_method, global_vars, locs)
         if not (isclass(self.target_entity) or ismodule(self.target_entity)):
@@ -147,9 +149,8 @@ class AstBuilder(object):
     @staticmethod
     def get_method_source(method):
         method = remove_decorators(method)
-        # tmp patch
-        while "__rf_original_method__" in method.func_globals:
-            method = method.func_globals["__rf_original_method__"]
+        while "__rf_original_method__" in method.__globals__:
+            method = method.__globals__["__rf_original_method__"]
         lines = inspect.getsourcelines(method)
         first_line = lines[0][0]
         indent = len(first_line) - len(first_line.lstrip())
@@ -215,7 +216,7 @@ class AstBuilder(object):
         node.method_class = self.method_node.method_class
         node.links = set()
 
-        from wrappers import flat_wrappers
+        from .wrappers import flat_wrappers
 
         if node_class in flat_wrappers:
             node.wrapper = flat_wrappers[node_class](node)

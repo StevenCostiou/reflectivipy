@@ -183,7 +183,7 @@ class ReificationGenerator(object):
             metalink.reified_arguments.append(arg_node)
 
     def rf_name_for_arg(self, arg, rf_id):
-        if isinstance(arg, basestring):
+        if isinstance(arg, str):
             return arg + "_" + rf_id
 
         self.reification_counter += 1
