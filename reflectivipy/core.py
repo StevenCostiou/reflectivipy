@@ -76,7 +76,7 @@ class ReflectiveMethod(object):
         return self.link_registry[metalink_id]
 
     def add_link(self, metalink):
-        self.link_registry[id(metalink)] = metalink
+        self.link_registry[hash(metalink)] = metalink
 
     def compile_rf_method(self, rf_ast, method_name):
         locs = {}

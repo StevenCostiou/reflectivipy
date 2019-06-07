@@ -23,7 +23,7 @@ def test_globals_metalink_registry():
     method_globals = ReflectivityExample.example_method.func_globals
 
     assert method_globals["__rf_method__"] is rf_method
-    assert method_globals["__rf_method__"].lookup_link(id(link)) is link
+    assert method_globals["__rf_method__"].lookup_link(hash(link)) is link
 
 
 def test_link_to_node():

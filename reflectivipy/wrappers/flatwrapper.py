@@ -38,17 +38,23 @@ class FlatWrapper(object):
         self.node_transformation.append(self.original_node)
 
     def gen_link_node(self, link):
-        metaobject = link.metaobject
-        selector = link.selector
-
         arguments = []
         arguments.extend(link.reified_arguments)
 
-        metaobject_node = ast.Const(metaobject)
-        attr_node = ast.Attribute(value=metaobject_node, attr=selector, ctx=ast.Load())
+        metaobject_node = self.gen_metaobject_node(link)
+        attr_node = ast.Attribute(value=metaobject_node, attr=link.selector, ctx=ast.Load())
         call_node = ast.Call(func=attr_node, args=arguments, keywords=[])
 
         return ast.Expr(call_node)
+
+    def gen_metaobject_node(self, link):
+        rf_method_node = AstBuilder().ast_load("__rf_method__")
+        link_id_node = ast.Num(hash(link))
+
+        link_attr_node = ast.Attribute(value=rf_method_node, attr="lookup_link", ctx=ast.Load())
+        link_call_node = ast.Call(func=link_attr_node, args=[link_id_node], keywords=[])
+
+        return ast.Attribute(value=link_call_node, attr="metaobject", ctx=ast.Load())
 
     def sort_links(self):
         for link in self.original_node.links:
