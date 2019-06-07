@@ -22,13 +22,13 @@ Let see how to install a link on a method AST towards a meta-object:
     # each time a dedicated AST node will be "visited/executed"
     class MetaLogger(object):
       def log_me(self):
-        print "I'm here"
+        print("I'm here")
 
 
     # Here is the class we will instrument
     class ExampleClass(object):
       def foo(self):
-        print 'Executing foo'
+        print('Executing foo')
 
 
     # We create a link ('control' is 'before' by default)
@@ -48,7 +48,7 @@ Let see how to install a link on a method AST towards a meta-object:
     a.foo()
 
     # When we don't need it anymore, we remove it
-    print 'Uninstall Metalink'
+    print('Uninstall Metalink')
     link.uninstall()
 
     a.foo()
