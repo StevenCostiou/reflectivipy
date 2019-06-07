@@ -78,6 +78,9 @@ class ReflectiveMethod(object):
     def add_link(self, metalink):
         self.link_registry[hash(metalink)] = metalink
 
+    def find_node_of_id_in_link(self, node_id, metalink):
+        return next(node for node in metalink.nodes if node.rf_id == node_id)
+
     def compile_rf_method(self, rf_ast, method_name):
         locs = {}
         compiled_method = compile(rf_ast, "<ast>", "exec")
