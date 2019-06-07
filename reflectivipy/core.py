@@ -36,6 +36,7 @@ class MetaLink(object):
         self.arguments = arguments or []
         self.reified_arguments = []
         self.option_arg_as_array = False
+        self.literal_value_reifications = []
 
     def add_node(self, rf_node):
         self.nodes.append(rf_node)
@@ -63,6 +64,7 @@ class ReflectiveMethod(object):
         self.reflective_ast = None
         self.link_registry = dict()
         self.init_reflective_method()
+        self.literal_value_reifications = dict()
 
     def init_reflective_method(self):
         builder = AstBuilder()
@@ -80,6 +82,12 @@ class ReflectiveMethod(object):
 
     def find_node_of_id_in_link(self, node_id, metalink):
         return next(node for node in metalink.nodes if node.rf_id == node_id)
+
+    def add_literal_value_reification(self, value):
+        self.literal_value_reifications[id(value)] = value
+
+    def get_literal_value_reifications(self, value_id):
+        return self.literal_value_reifications[value_id]
 
     def compile_rf_method(self, rf_ast, method_name):
         locs = {}

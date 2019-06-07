@@ -32,18 +32,21 @@ def test_class_reification():
     assert example.tag is ReflectivityExample
 
 
-def test_const_reification():
+def test_literal_value_reification():
     example = ReflectivityExample()
     an_object = ReflectivityExample()
-    link = MetaLink(example, 'tag_exec', 'before', [an_object])
+    link = MetaLink(example, 'tag_reifications', 'before', [an_object, 42, "hello", None])
     rf_ast = reflectivipy.reflective_method_for(ReflectivityExample, 'example_assign_call')
     node = rf_ast.original_ast.body[0].body[1]
 
     reflectivipy.link(link, node)
 
-    assert example.tag is None
+    assert len(example.tagged_reifications) is 0
     assert ReflectivityExample().example_assign_call() == 2
-    assert example.tag is an_object
+    assert example.tagged_reifications[0] is an_object
+    assert example.tagged_reifications[1] is 42
+    assert example.tagged_reifications[2] is "hello"
+    assert example.tagged_reifications[3]is None
 
 
 def test_object_reification():

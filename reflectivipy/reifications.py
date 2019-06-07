@@ -13,12 +13,14 @@ class Reification(object):
         return getattr(self, visit_method)
 
 
-class ConstReification(Reification):
+class LiteralValueReification(Reification):
     def __init__(self, value):
         self.value = value
 
     def visit_node(self, rf_node, metalink):
-        return ast.Const(self.value)
+        rf_node.method_node.reflective_method.add_literal_value_reification(self.value)
+        attr_node = ast.Attribute(value=rf_method_reification(), attr="get_literal_value_reifications", ctx=ast.Load())
+        return ast.Call(func=attr_node, args=[ast.Num(id(self.value))], keywords=[])
 
 
 class LinkReification(Reification):
@@ -129,7 +131,7 @@ reifications_dict = {
 def reification_for(key, metalink):
     if key in reifications_dict:
         return reifications_dict[key]()
-    return ConstReification(key)
+    return LiteralValueReification(key)
 
 
 def rf_method_reification():
