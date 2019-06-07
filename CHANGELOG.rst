@@ -1,6 +1,14 @@
 Changelog
 ---------
 
+0.1.0
++++++
+
+**Features**
+
+- Add support for Python 3.
+
+
 0.0.2
 +++++
 
