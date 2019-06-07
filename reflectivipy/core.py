@@ -61,7 +61,6 @@ class ReflectiveMethod(object):
         self.original_method = method
         self.original_ast = None
         self.reflective_ast = None
-        self.links = set()
         self.link_registry = dict()
         self.init_reflective_method()
 
@@ -77,7 +76,6 @@ class ReflectiveMethod(object):
         return self.link_registry[metalink_id]
 
     def add_link(self, metalink):
-        self.links.add(metalink)
         self.link_registry[id(metalink)] = metalink
 
     def compile_rf_method(self, rf_ast, method_name):
@@ -103,7 +101,7 @@ class ReflectiveMethod(object):
         self.recompile()
 
     def restore(self):
-        self.links = set()
+        self.link_registry = dict()
         self.init_reflective_method()
         self.recompile()
 
