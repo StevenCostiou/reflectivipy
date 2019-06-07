@@ -139,7 +139,7 @@ def rf_method_reification():
 
 
 def link_reification(link):
-    link_id_node = ast.Num(hash(link))
+    link_id_node = ast.Num(id(link))
 
     link_attr_node = ast.Attribute(value=rf_method_reification(), attr="lookup_link", ctx=ast.Load())
     return ast.Call(func=link_attr_node, args=[link_id_node], keywords=[])
